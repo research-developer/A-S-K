@@ -13,6 +13,7 @@ from .glyphs import (
     ENHANCED_CLUSTER_MAP,
     COMPLETE_OPERATOR_MAP,
     TYPED_PAYLOAD_MAP,
+    NAMED_PAYLOADS,
 )
 
 # Vowel set (treat 'y' as vowel payload for USK)
@@ -291,6 +292,31 @@ def enhanced_decode_word(surface: str) -> Dict[str, Any]:
         validation["is_kernel"] = True
         validation["kernel_proof"] = "A(aperture) → S(stream) → K(clamp) = semantic retrieval"
     
+    # Demonstratives heuristic: treat as deictic/indexical lexemes
+    demonstratives = {
+        "this": {"proximity": "proximal", "number": "singular"},
+        "that": {"proximity": "distal", "number": "singular"},
+        "these": {"proximity": "proximal", "number": "plural"},
+        "those": {"proximity": "distal", "number": "plural"},
+    }
+    demo_payload: Optional[Dict[str, Any]] = None
+    if surface.lower() in demonstratives and NAMED_PAYLOADS.get("deictic_index"):
+        base = dict(NAMED_PAYLOADS["deictic_index"])  # copy
+        # attach concrete features
+        feats = dict(base.get("features", {}))
+        feats.update(demonstratives[surface.lower()])
+        base["features"] = feats
+        demo_payload = base
+
+    if demo_payload is not None:
+        operators_expanded = ["index", "deictic", demo_payload["features"]["proximity"]]
+        typed_payloads = [demo_payload]
+        gloss = "deictic (index, {prox}, {num})".format(
+            prox=demo_payload["features"]["proximity"],
+            num=demo_payload["features"]["number"],
+        )
+        overall_confidence = demo_payload.get("confidence", 0.9)
+
     return {
         "surface": surface,
         "morphology": morph,

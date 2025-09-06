@@ -138,7 +138,8 @@ class GlyphFieldSystem:
         self.tag_associations: Dict[str, Dict[str, float]] = defaultdict(dict)  # tag -> {glyph: confidence}
         self.data_path = data_path or Path('/Users/preston/Projects/A-S-K/data/glyph_fields.json')
         self.initialize_fields()
-        self.load_confidence_data()
+        if self.persist:
+            self.load_confidence_data()
     
     def initialize_fields(self):
         """Initialize operator fields with baseline associations"""
@@ -266,9 +267,13 @@ class GlyphFieldSystem:
         
         tag, confidence = self.fields[glyph].get_best_tag(position, cluster)
         
-        # Optional: track usage for learning
+        # Optional: track usage for learning (dedup + cap to 10)
         if context_word:
-            self.fields[glyph].tags[tag].contexts.append(context_word)
+            ctxs = self.fields[glyph].tags[tag].contexts
+            if context_word not in ctxs:
+                ctxs.append(context_word)
+                if len(ctxs) > 10:
+                    del ctxs[:-10]
         
         return tag, confidence
     
@@ -278,6 +283,8 @@ class GlyphFieldSystem:
     
     def save_confidence_data(self):
         """Persist confidence data to disk"""
+        if not self.persist:
+            return
         data = {
             'fields': {},
             'tag_associations': dict(self.tag_associations)
@@ -298,11 +305,24 @@ class GlyphFieldSystem:
             }
         
         self.data_path.parent.mkdir(parents=True, exist_ok=True)
+        # Dedupe and cap contexts prior to save
+        for glyph, field_obj in self.fields.items():
+            for tag, t in field_obj.tags.items():
+                # preserve order, remove dups, cap at 10
+                seen = set()
+                deduped = []
+                for c in t.contexts:
+                    if c not in seen:
+                        seen.add(c)
+                        deduped.append(c)
+                t.contexts = deduped[-10:]
         with open(self.data_path, 'w') as f:
             json.dump(data, f, indent=2)
     
     def load_confidence_data(self):
         """Load confidence data from disk if it exists"""
+        if not self.persist:
+            return
         if self.data_path.exists():
             try:
                 with open(self.data_path) as f:

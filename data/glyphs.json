@@ -90,5 +90,18 @@
     "o": {"type": "container", "tag": "object", "principle": "wholeness", "confidence": 0.90},
     "u": {"type": "struct", "tag": "capacity", "principle": "root/union", "confidence": 0.85},
     "y": {"type": "branch", "tag": "branch", "principle": "bifurcated", "confidence": 0.80}
+  },
+  "named_payloads": {
+    "deictic_index": {
+      "type": "deictic_index",
+      "tag": "index",
+      "principle": "pointing/proximal-distal reference",
+      "features": {
+        "proximity": "proximal|distal",
+        "number": "singular|plural",
+        "scope": "utterance/context"
+      },
+      "confidence": 0.95
+    }
   }
 }
