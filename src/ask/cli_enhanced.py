@@ -87,6 +87,12 @@ def decode(
     if verbose:
         console.print("\n[bold]Detailed Analysis:[/bold]")
         
+        # Show adjacency pairs
+        if decoded.get("pairs"):
+            console.print("[cyan]Adjacency Pairs (operator → payload):[/cyan]")
+            for op, pay in decoded["pairs"]:
+                console.print(f"  {op} → {pay or '—'}")
+        
         # Show operator confidence
         op_details = []
         for op in decoded["operators"]:
@@ -99,7 +105,7 @@ def decode(
                     break
         
         if op_details:
-            console.print("[cyan]Operators:[/cyan]")
+            console.print("\n[cyan]Operators:[/cyan]")
             for detail in op_details:
                 console.print(detail)
         
@@ -107,10 +113,23 @@ def decode(
         if decoded["typed_payloads"]:
             console.print("\n[cyan]Payload Types:[/cyan]")
             for payload in decoded["typed_payloads"]:
-                console.print(
-                    f"  {payload['tag']}: {payload['principle']} "
-                    f"[dim](type: {payload['type']})[/dim]"
-                )
+                if not payload:
+                    console.print("  — (none)")
+                else:
+                    console.print(
+                        f"  {payload['tag']}: {payload['principle']} "
+                        f"[dim](type: {payload['type']})[/dim]"
+                    )
+        
+        # Show audit
+        if decoded.get("audit"):
+            a = decoded["audit"]
+            status = a.get("verdict", "ok")
+            color = "green" if status == "ok" else "yellow"
+            console.print("\n[cyan]Audit:[/cyan]")
+            console.print(f"  Verdict: [{color}]{status}[/{color}]  Confidence: {a.get('confidence', 0):.0%}")
+            for issue in a.get("issues", []):
+                console.print(f"  • {issue}")
 
 
 @app.command()

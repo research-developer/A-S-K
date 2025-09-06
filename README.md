@@ -200,6 +200,33 @@ PYTHONPATH=src python -m ask.cli decode manipulation --json-out
 - Seed data lives in `data/decoded_words.jsonl` as JSONL records for the Test Bench.
 
 
+## Environment
+
+Create a `.env` file at the project root with any provider keys you want to use (optional):
+
+```env
+OPENAI_API_KEY=...  # required for audit command
+# HUGGINGFACE_API_KEY=...
+# GEMINI_API_KEY=...
+```
+
+Note: `.env` is listed in `.gitignore`. Do not commit secrets.
+
+
+## Audit (Model-assisted review)
+
+Use OpenAI `gpt-5-mini` to audit a decoded word (requires `OPENAI_API_KEY` in environment):
+
+```bash
+PYTHONPATH=src OPENAI_API_KEY=your_key python -m ask.cli audit ask
+```
+
+Options:
+
+- `--model` to select an OpenAI chat model (default `gpt-5-mini`).
+- `--no-json-out` to print a pretty (non-JSON) report.
+
+
 ## Project Structure
 
 ```

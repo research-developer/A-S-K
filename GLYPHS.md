@@ -95,6 +95,15 @@ This is the minimal executable kernel for semantic retrieval, structurally isomo
    - "seek" retains s-k pairing (search→selection)
 
 
+## Adjacency Rule (Operator→Payload Pairing)
+
+- Each consonant operator (or recognized consonant cluster) consumes the immediately following vowel run as its payload.
+- A vowel run may be one or more vowels; multi-vowel runs are treated as a composite payload (e.g., "io" → index+container).
+- If no vowel follows an operator (word-final consonant), the operator is suffix-only for that token; downstream composition decides whether to absorb or retain it.
+- Word-initial vowels are allowed as standalone payloads only in vowel-initial words; otherwise they are consumed by the first operator.
+
+This convention preserves surface order, prevents payload reattachment to later consonants, and enables principled handling of diphthongs and vowel clusters.
+
 ## Composition Rules
 
 Operators combine to form complex programs:

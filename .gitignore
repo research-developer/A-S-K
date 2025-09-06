@@ -3,3 +3,5 @@ README.html
 .data
 __pycache__
 src/ask/__pycache__
+.env
+.cache/

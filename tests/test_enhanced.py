@@ -120,8 +120,15 @@ def test_compound_words():
     decoded = enhanced_decode_word("understand")
     assert "negate" in decoded["operators"]  # un- prefix
     
-    # manipulation
+    # manipulation: verify adjacency and composite payload
     decoded = enhanced_decode_word("manipulation")
+    # Ensure 't' consumes 'io' and final 'n' has no payload
+    pairs = decoded["pairs"]
+    assert ("t", "io") in pairs or any(op == "t" and (pay == "io") for op, pay in pairs)
+    # last pair likely ('n', None)
+    assert pairs[-1][0].endswith("n")
+    assert pairs[-1][1] in (None, "")
+    # sanity on operators/confidence
     assert "multiply" in decoded["operators"]  # m
     assert decoded["confidence"] > 0.5
     
