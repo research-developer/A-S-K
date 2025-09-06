@@ -87,7 +87,12 @@ def main() -> None:
         return {"ok": False, "error": res.error or "unknown error"}
 
     # Run using FastMCP's default transport (STDIO) for MCP clients
-    app.run()
+    try:
+        app.run()
+    except KeyboardInterrupt:
+        # Graceful shutdown when user presses Ctrl-C in a terminal
+        print("\nA-S-K MCP server interrupted. Exiting cleanly.")
+        sys.exit(0)
 
 
 if __name__ == "__main__":
