@@ -513,7 +513,7 @@
     },
     "r": {
       "tags": {
-        "rotate": {
+        "orient": {
           "confidence": 0.5,
           "evidence_count": 0,
           "contexts": []
