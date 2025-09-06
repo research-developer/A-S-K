@@ -9,7 +9,10 @@ can consume the same functionality without duplicating implementation details.
 from typing import Any, Dict, List, Optional
 
 from ask.enhanced_factorizer import enhanced_decode_word
+from pathlib import Path
 from ask.merged_glyphs import get_merged_glyphs
+from ask.merged_glyphs_db import get_db_merged
+from ask.core.db import DEFAULT_DB_PATH
 from ask.state_syntax import USKParser, TYPE_COLORS
 from ask.glyph_fields import GlyphFieldSystem
 from ask.core.models import DecodeResult, SyntaxResult
@@ -25,7 +28,16 @@ class ASKServices:
         # Central glyph system instance; can be configured for persistence
         self.glyph_system = GlyphFieldSystem(persist=persist)
         self.parser = USKParser(glyph_system=self.glyph_system)
-        self._merged = get_merged_glyphs()
+        # Prefer DB as the atomic ground truth; fall back to JSON merged file
+        db_path = DEFAULT_DB_PATH
+        try:
+            if Path(db_path).exists():
+                self._merged = get_db_merged(db_path)
+            else:
+                self._merged = get_merged_glyphs()
+        except Exception:
+            # If DB init fails for any reason, fall back to JSON
+            self._merged = get_merged_glyphs()
         # Precompute lookup maps from merged normalized lists
         ml = self._merged
         self._typed_payload_by_vowel: Dict[str, Dict[str, Any]] = {e.get("vowel"): e for e in ml.typed_payload_entries()}

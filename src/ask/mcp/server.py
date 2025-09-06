@@ -44,7 +44,8 @@ class ASKMCPEndpoints:
         self.services = get_services(persist=persist)
         # Guesses storage directory
         override = os.getenv("ASK_GUESS_DIR")
-        self.guess_dir: Optional[Path] = Path(override) if override else Path("data/guesses")
+        # Default to .cache/guesses for non-atomic, derived artifacts
+        self.guess_dir: Optional[Path] = Path(override) if override else Path(".cache/guesses")
         self._memory_games: Dict[str, Dict[str, Any]] = {}
         # Try to create on-disk directory; on read-only FS, fallback to temp dir; otherwise use in-memory
         try:
@@ -66,12 +67,24 @@ class ASKMCPEndpoints:
             "ask","matrix","present","line","rotate","transform","stream",
             "manipulation","structure","index","object","kernel","process",
             "reason","symbol","carry","convert","strict","string","strong",
+            # Expanded pool for more robust gameplay
+            "system","design","pattern","module","adapter","bridge","facade",
+            "iterator","observer","visitor","strategy","command","factory",
+            "builder","proxy","singleton","compose","compile","analyze",
+            "optimize","balance","cluster","feature","payload","operator",
+            "combine","segment","enhance","gloss","decode","syntax","latin",
+            "english","tag","context","behavior","position","preference",
+            "evidence","confidence","mapping","lookup","search","filter",
+            "random","choice","select","length","include","persist",
+            "storage","memory","filesystem","temporary","fallback","default",
         ]
 
     # -------- Utility helpers --------
     def _load_corpus(self) -> List[str]:
-        """Load a word corpus from data/decoded_words.jsonl if available; fallback to in-code list."""
-        jsonl = Path("data/decoded_words.jsonl")
+        """Load a word corpus, preferring .cache/decoded_words.jsonl, then data/decoded_words.jsonl; fallback to in-code list."""
+        cache_jsonl = Path(".cache/decoded_words.jsonl")
+        data_jsonl = Path("data/decoded_words.jsonl")
+        jsonl = cache_jsonl if cache_jsonl.exists() else data_jsonl
         words: List[str] = []
         if jsonl.exists():
             try:
@@ -257,9 +270,10 @@ class ASKMCPEndpoints:
             except FileNotFoundError:
                 return MCPResponse(ok=False, error="Unknown game id")
 
-            secret = str(rec.get("word", "")).lower()
-            latest = str(guesses[-1]).lower()
-            correct = (latest == secret) if latest else False
+            secret = str(rec.get("word", "")).strip().lower()
+            # Consider any guess in the list correct if it matches the secret (case-insensitive, trimmed)
+            normalized_guesses = [str(g).strip().lower() for g in guesses if g is not None]
+            correct = secret in normalized_guesses if normalized_guesses else False
             now = datetime.now(timezone.utc).isoformat()
             attempt = {"at": now, "guesses": guesses, "correct": correct}
             rec.setdefault("attempts", []).append(attempt)
