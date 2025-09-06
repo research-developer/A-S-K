@@ -290,6 +290,73 @@ Client integration:
 
 - Configure your MCP client to launch `ask-mcp` as a stdio server. In many editors/clients, this is set in an MCP server registry/config file with a command entry of `ask-mcp` and no args.
 
+### MCP Game
+
+The MCP server exposes a simple word guessing game with two tools: `test_me` and `guess`. Game state is persisted under `data/guesses/` as JSON files keyed by UUID.
+
+Tools
+
+- `test_me(length?: number, include?: string[], num?: number = 3)`
+  - Selects a secret word (not revealed).
+  - Filters:
+    - `length`: exact character length (optional)
+    - `include`: list of characters that must appear in the word (optional)
+  - Produces a left-to-right linear list of tags (operators/payload tags) of size `num` (default `3`). If `num` exceeds the number of available tags, all available tags are returned with a `warning` string.
+  - Response:
+    - `{ id: string, tags: string[], warning?: string }`
+
+- `guess(id: string, guesses: string[], reveal?: boolean = false)`
+  - Appends a guess attempt to the game, marks whether the latest guess is correct.
+  - When `reveal=true`, includes the secret word.
+  - Response:
+    - `{ attempts: number, correct: boolean, reveal?: { word: string } }`
+
+Storage
+
+- Files saved at `data/guesses/<uuid>.json` with shape:
+
+```json
+{
+  "id": "<uuid>",
+  "word": "<secret>",
+  "created_at": "<ISO8601>",
+  "params": { "length": 8, "include": ["a","t"], "num": 3 },
+  "tags": ["present", "base", "transform"],
+  "attempts": [
+    { "at": "<ISO8601>", "guesses": ["foobar"], "correct": false }
+  ]
+}
+```
+
+Examples (MCP client payloads)
+
+- Start a game with three tags:
+
+```json
+{
+  "tool": "test_me",
+  "params": { "num": 3 }
+}
+```
+
+- Start a game with filters and larger `num` (may return `warning` if too large):
+
+```json
+{
+  "tool": "test_me",
+  "params": { "length": 8, "include": ["a","t"], "num": 6 }
+}
+```
+
+- Submit a guess and request reveal:
+
+```json
+{
+  "tool": "guess",
+  "params": { "id": "<uuid>", "guesses": ["practice"], "reveal": true }
+}
+```
+
 ### ask-fields (field-based glyph analysis CLI)
 
 ```bash

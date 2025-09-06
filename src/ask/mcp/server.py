@@ -17,7 +17,13 @@ with method names "decode" and "syntax" to these handlers.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List, Tuple
+import os
+import json
+import uuid
+import random
+from datetime import datetime, timezone
+from pathlib import Path
 
 from ask.core import get_services
 
@@ -34,6 +40,85 @@ class ASKMCPEndpoints:
 
     def __init__(self, persist: Optional[bool] = None) -> None:
         self.services = get_services(persist=persist)
+        # Guesses storage directory
+        self.guess_dir = Path("data/guesses")
+        self.guess_dir.mkdir(parents=True, exist_ok=True)
+        # Fallback wordlist (lowercase)
+        self._fallback_words: List[str] = [
+            "ask","matrix","present","line","rotate","transform","stream",
+            "manipulation","structure","index","object","kernel","process",
+            "reason","symbol","carry","convert","strict","string","strong",
+        ]
+
+    # -------- Utility helpers --------
+    def _load_corpus(self) -> List[str]:
+        """Load a word corpus from data/decoded_words.jsonl if available; fallback to in-code list."""
+        jsonl = Path("data/decoded_words.jsonl")
+        words: List[str] = []
+        if jsonl.exists():
+            try:
+                with jsonl.open("r", encoding="utf-8") as fh:
+                    for line in fh:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        try:
+                            rec = json.loads(line)
+                            w = (rec.get("word") or rec.get("surface") or "").strip()
+                            if w:
+                                words.append(w.lower())
+                        except Exception:
+                            continue
+            except Exception:
+                # On any issue, return fallback
+                return list(self._fallback_words)
+        return words or list(self._fallback_words)
+
+    def _filter_words(self, words: List[str], length: Optional[int], include: Optional[List[str]]) -> List[str]:
+        result = [w for w in words]
+        if length is not None and length > 0:
+            result = [w for w in result if len(w) == int(length)]
+        if include:
+            inc = [c.lower() for c in include if isinstance(c, str) and c]
+            if inc:
+                result = [w for w in result if all(ch in w for ch in inc)]
+        return result
+
+    def _pick_word(self, length: Optional[int], include: Optional[List[str]]) -> Tuple[Optional[str], Optional[str]]:
+        """Pick a word using filters. Returns (word, error)."""
+        words = self._load_corpus()
+        candidates = self._filter_words(words, length, include)
+        if not candidates:
+            return None, "No words match the given filters"
+        return random.choice(candidates), None
+
+    def _linear_tags(self, word: str) -> List[str]:
+        """Build a left-to-right linear tag list from the enhanced decode.
+        We interleave operator names and payload tags per step.
+        """
+        decoded = self.services.decode(word).decoded
+        ops = list(decoded.get("operators") or [])
+        pays = list(decoded.get("payloads") or [])
+        tags: List[str] = []
+        # Pair by index; append operator then payload tag if present
+        for i, op in enumerate(ops):
+            if op:
+                tags.append(str(op))
+            if i < len(pays) and pays[i]:
+                tags.append(str(pays[i]))
+        return tags
+
+    def _save_game(self, gid: str, payload: Dict[str, Any]) -> None:
+        tmp = self.guess_dir / f"{gid}.json.tmp"
+        dst = self.guess_dir / f"{gid}.json"
+        with tmp.open("w", encoding="utf-8") as fh:
+            json.dump(payload, fh, indent=2)
+        tmp.replace(dst)
+
+    def _load_game(self, gid: str) -> Dict[str, Any]:
+        path = self.guess_dir / f"{gid}.json"
+        with path.open("r", encoding="utf-8") as fh:
+            return json.load(fh)
 
     async def decode(self, params: Dict[str, Any]) -> MCPResponse:
         try:
@@ -64,6 +149,96 @@ class ASKMCPEndpoints:
                 "head_id": tok.get("head_id"),
             } for tok in seq]
             return MCPResponse(ok=True, data={"sequence": minimal})
+        except Exception as e:
+            return MCPResponse(ok=False, error=str(e))
+
+    async def test_me(self, params: Dict[str, Any]) -> MCPResponse:
+        """Start a new guessing game.
+        Params: length?: int, include?: list[str], num?: int (default 3)
+        Returns: { id, tags[, warning] }
+        """
+        try:
+            length = params.get("length")
+            include = params.get("include")
+            num = params.get("num", 3)
+
+            if length is not None:
+                try:
+                    length = int(length)
+                except Exception:
+                    return MCPResponse(ok=False, error="length must be an integer")
+            if include is not None and not isinstance(include, list):
+                return MCPResponse(ok=False, error="include must be a list of characters")
+            if not isinstance(num, int) or num < 0:
+                return MCPResponse(ok=False, error="num must be a non-negative integer")
+
+            word, err = self._pick_word(length=length, include=include)
+            if err:
+                return MCPResponse(ok=False, error=err)
+
+            tags = self._linear_tags(word)
+            warning = None
+            if num == 0:
+                out_tags: List[str] = []
+            elif num > len(tags):
+                out_tags = list(tags)
+                warning = f"Requested num={num} exceeds available tags={len(tags)}; returning all"
+            else:
+                out_tags = tags[:num]
+
+            gid = str(uuid.uuid4())
+            now = datetime.now(timezone.utc).isoformat()
+            record = {
+                "id": gid,
+                "word": word,
+                "created_at": now,
+                "params": {"length": length, "include": include, "num": num},
+                "tags": out_tags,
+                "attempts": [],
+            }
+            self._save_game(gid, record)
+
+            resp: Dict[str, Any] = {"id": gid, "tags": out_tags}
+            if warning:
+                resp["warning"] = warning
+            return MCPResponse(ok=True, data=resp)
+        except Exception as e:
+            return MCPResponse(ok=False, error=str(e))
+
+    async def guess(self, params: Dict[str, Any]) -> MCPResponse:
+        """Submit guesses for an existing game id.
+        Params: id: str, guesses: list[str], reveal?: bool
+        Returns: { attempts, correct[, reveal: { word }] }
+        """
+        try:
+            gid = params.get("id")
+            guesses = params.get("guesses")
+            reveal = bool(params.get("reveal", False))
+            if not gid:
+                return MCPResponse(ok=False, error="Missing 'id'")
+            if not isinstance(guesses, list) or not guesses:
+                return MCPResponse(ok=False, error="'guesses' must be a non-empty list")
+
+            try:
+                rec = self._load_game(gid)
+            except FileNotFoundError:
+                return MCPResponse(ok=False, error="Unknown game id")
+
+            secret = str(rec.get("word", "")).lower()
+            latest = str(guesses[-1]).lower()
+            correct = (latest == secret) if latest else False
+            now = datetime.now(timezone.utc).isoformat()
+            attempt = {"at": now, "guesses": guesses, "correct": correct}
+            rec.setdefault("attempts", []).append(attempt)
+            self._save_game(gid, rec)
+
+            data: Dict[str, Any] = {
+                "attempts": len(rec.get("attempts", [])),
+                "correct": correct,
+            }
+            if reveal:
+                data["reveal"] = {"word": rec.get("word")}
+            return MCPResponse(ok=True, data=data)
         except Exception as e:
             return MCPResponse(ok=False, error=str(e))
 

@@ -53,6 +53,29 @@ def main() -> None:
             return {"ok": True, "data": res.data}
         return {"ok": False, "error": res.error or "unknown error"}
 
+    # --- Game tools ---
+    @app.tool
+    async def test_me(length: int | None = None, include: list[str] | None = None, num: int = 3) -> Dict[str, Any]:
+        """Start a new guessing game.
+        Optional filters: exact length and characters to include; num controls number of tags returned.
+        Returns { id, tags[, warning] } on success.
+        """
+        params: Dict[str, Any] = {"length": length, "include": include, "num": num}
+        res = await endpoints.test_me(params)
+        if res.ok:
+            return {"ok": True, "data": res.data}
+        return {"ok": False, "error": res.error or "unknown error"}
+
+    @app.tool
+    async def guess(id: str, guesses: list[str], reveal: bool = False) -> Dict[str, Any]:
+        """Submit guesses for a game id.
+        When reveal=true, also returns the underlying word.
+        """
+        res = await endpoints.guess({"id": id, "guesses": guesses, "reveal": reveal})
+        if res.ok:
+            return {"ok": True, "data": res.data}
+        return {"ok": False, "error": res.error or "unknown error"}
+
     # Run using FastMCP's default transport (STDIO) for MCP clients
     app.run()
 
