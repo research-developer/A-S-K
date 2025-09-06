@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional
 
 from ask.enhanced_factorizer import enhanced_decode_word, COMPLETE_OPERATOR_MAP, ENHANCED_CLUSTER_MAP
 from ask.glyphs import TYPED_PAYLOAD_MAP
+from ask.merged_glyphs import get_merged_glyphs
 from ask.state_syntax import USKParser, TYPE_COLORS
 from ask.glyph_fields import GlyphFieldSystem
 
@@ -42,6 +43,7 @@ class ASKServices:
         # Central glyph system instance; can be configured for persistence
         self.glyph_system = GlyphFieldSystem(persist=persist)
         self.parser = USKParser(glyph_system=self.glyph_system)
+        self._merged = get_merged_glyphs()
 
     # Enhanced decode (factorizer-centric)
     def decode(self, word: str) -> DecodeResult:
@@ -307,6 +309,33 @@ class ASKServices:
             "sequence": seq,
         }
         return SyntaxResult(**payload)
+
+    # Merged glyph datasets (list-only interface)
+    def merged_lists(self, section: Optional[str] = None) -> Dict[str, Any]:
+        """Return normalized list views from the merged glyph datasets.
+        If section is provided, return only that list under {section: [...]};
+        otherwise return all normalized lists.
+        Sections: vowels, payload_entries, operator_entries, complete_operator_entries,
+        typed_payload_entries, cluster_entries, enhanced_cluster_entries, field_entries,
+        tag_association_entries.
+        """
+        m = self._merged
+        all_lists = {
+            "vowels": m.vowels(),
+            "payload_entries": m.payload_entries(),
+            "operator_entries": m.operator_entries(),
+            "complete_operator_entries": m.complete_operator_entries(),
+            "typed_payload_entries": m.typed_payload_entries(),
+            "cluster_entries": m.cluster_entries(),
+            "enhanced_cluster_entries": m.enhanced_cluster_entries(),
+            "field_entries": m.field_entries(),
+            "tag_association_entries": m.tag_association_entries(),
+        }
+        if section:
+            if section not in all_lists:
+                raise ValueError(f"unknown section: {section}")
+            return {section: all_lists[section]}
+        return all_lists
 
     def list_operators(self, min_conf: float = 0.0) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []

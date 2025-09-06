@@ -279,7 +279,6 @@
           "confidence": 0.5,
           "evidence_count": 0,
           "contexts": [
-            "ask",
             "ask"
           ]
         },
@@ -289,15 +288,9 @@
           "contexts": []
         },
         "clamp": {
-          "confidence": 0.7566666666666667,
-          "evidence_count": 4,
+          "confidence": 0.6,
+          "evidence_count": 1,
           "contexts": [
-            "ask",
-            "ask",
-            "ask",
-            "ask",
-            "ask",
-            "ask",
             "ask"
           ]
         },
@@ -402,6 +395,11 @@
     },
     "n": {
       "tags": {
+        "in": {
+          "confidence": 0.5,
+          "evidence_count": 0,
+          "contexts": []
+        },
         "negate": {
           "confidence": 0.5,
           "evidence_count": 0,
@@ -513,7 +511,7 @@
     },
     "r": {
       "tags": {
-        "orient": {
+        "rotate": {
           "confidence": 0.5,
           "evidence_count": 0,
           "contexts": []
@@ -555,18 +553,12 @@
     "s": {
       "tags": {
         "stream": {
-          "confidence": 1.0,
-          "evidence_count": 22,
+          "confidence": 0.8727380952380953,
+          "evidence_count": 7,
           "contexts": [
             "stream",
             "strike",
             "slow",
-            "ask",
-            "ask",
-            "ask",
-            "ask",
-            "ask",
-            "ask",
             "ask"
           ]
         },
@@ -955,7 +947,7 @@
       "k": 0.5
     },
     "clamp": {
-      "k": 0.7566666666666667
+      "k": 0.6
     },
     "kindle": {
       "k": 0.5
@@ -1004,6 +996,9 @@
     },
     "mother": {
       "m": 0.5
+    },
+    "in": {
+      "n": 0.5
     },
     "negate": {
       "n": 0.5
@@ -1081,7 +1076,7 @@
       "r": 0.5
     },
     "stream": {
-      "s": 1.0
+      "s": 0.8727380952380953
     },
     "scatter": {
       "s": 0.5

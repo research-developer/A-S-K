@@ -378,6 +378,50 @@ Examples (MCP client payloads)
 }
 ```
 
+### Merged Glyph Dataset
+
+To unify operator/payload maps (`data/glyphs.json`) with field-based glyph associations (`data/glyph_fields.json`) without losing information, use the merge script:
+
+```bash
+python tools/merge_glyph_datasets.py
+```
+
+This produces `data/glyphs_merged.json` with two top-level sections:
+
+- `merged` — Exact, lossless union of the source objects (maps from both files preserved verbatim).
+- `normalized` — List-based views for clients that prefer list-only interfaces. Sections include:
+  - `vowels`, `payload_entries`, `operator_entries`, `complete_operator_entries`, `typed_payload_entries`,
+    `cluster_entries`, `enhanced_cluster_entries`, `field_entries`, `tag_association_entries`.
+
+Programmatic access:
+
+- Python loader that always returns lists:
+
+```python
+from ask.merged_glyphs import get_merged_glyphs
+mg = get_merged_glyphs()
+fields = mg.field_entries()  # list
+operators = mg.operator_entries()  # list
+```
+
+- Services facade (returns dict of lists, or a single list when filtered):
+
+```python
+from ask.core.services import get_services
+s = get_services()
+all_lists = s.merged_lists()
+only_fields = s.merged_lists('field_entries')
+```
+
+- MCP tool (FastMCP):
+
+```json
+{ "tool": "merged_lists", "params": {} }
+{ "tool": "merged_lists", "params": { "section": "field_entries" } }
+```
+
+Verification: the merge script asserts that each `merged` subsection is identical to its source and that normalized entries preserve key sets.
+
 ### ask-fields (field-based glyph analysis CLI)
 
 ```bash

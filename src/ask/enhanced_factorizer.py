@@ -154,9 +154,11 @@ def pair_ops_with_payloads(surface: str) -> List[Tuple[str, Optional[str]]]:
     i = 0
     pairs: List[Tuple[str, Optional[str]]] = []
     
+    buffered_vowels = ""
     while i < len(s):
-        # Skip leading vowels (they'll be consumed by operators)
+        # Accumulate leading vowels to attach to the next operator
         if s[i] in VOWELS:
+            buffered_vowels += s[i]
             i += 1
             continue
         
@@ -184,8 +186,11 @@ def pair_ops_with_payloads(surface: str) -> List[Tuple[str, Optional[str]]]:
         payload_start = i
         while i < len(s) and s[i] in VOWELS:
             i += 1
-        
-        payload = s[payload_start:i] if payload_start < i else None
+        # Immediate payload after operator
+        immediate = s[payload_start:i] if payload_start < i else None
+        # If no immediate payload but we buffered a leading run, attach it now
+        payload = immediate if immediate else (buffered_vowels or None)
+        buffered_vowels = "" if payload else buffered_vowels
         pairs.append((op_token, payload))
     
     return pairs

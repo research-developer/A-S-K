@@ -242,6 +242,20 @@ class ASKMCPEndpoints:
         except Exception as e:
             return MCPResponse(ok=False, error=str(e))
 
+    async def merged_lists(self, params: Dict[str, Any]) -> MCPResponse:
+        """Return normalized list views from merged glyph datasets.
+        Optional params: { section?: str }
+        Sections: vowels, payload_entries, operator_entries, complete_operator_entries,
+        typed_payload_entries, cluster_entries, enhanced_cluster_entries, field_entries,
+        tag_association_entries.
+        """
+        try:
+            section = params.get("section") if params else None
+            data = self.services.merged_lists(section=section)
+            return MCPResponse(ok=True, data=data)
+        except Exception as e:
+            return MCPResponse(ok=False, error=str(e))
+
 
 def create_mcp_server(persist: Optional[bool] = None) -> ASKMCPEndpoints:
     """Factory to create endpoint set; wire into desired MCP runtime externally."""

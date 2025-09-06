@@ -48,7 +48,7 @@
       "k": "clamp",
       "l": "align",
       "m": "multiply",
-      "n": "negate",
+      "n": "in",
       "p": "present",
       "q": "query",
       "r": "rotate",
@@ -310,7 +310,7 @@
         "confidence": 0.9
       },
       "n": {
-        "op": "negate",
+        "op": "in",
         "principle": "next/not alternative",
         "confidence": 0.85
       },
@@ -809,6 +809,11 @@
       },
       "n": {
         "tags": {
+          "in": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
           "negate": {
             "confidence": 0.5,
             "evidence_count": 0,
@@ -1705,7 +1710,7 @@
       },
       {
         "glyph": "n",
-        "value": "negate"
+        "value": "n"
       },
       {
         "glyph": "p",

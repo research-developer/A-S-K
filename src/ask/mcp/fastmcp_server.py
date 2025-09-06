@@ -76,6 +76,16 @@ def main() -> None:
             return {"ok": True, "data": res.data}
         return {"ok": False, "error": res.error or "unknown error"}
 
+    @app.tool
+    async def merged_lists(section: str | None = None) -> Dict[str, Any]:
+        """Return normalized list views from the merged glyph datasets.
+        Optional section filter to return only one list.
+        """
+        res = await endpoints.merged_lists({"section": section} if section else {})
+        if res.ok:
+            return {"ok": True, "data": res.data}
+        return {"ok": False, "error": res.error or "unknown error"}
+
     # Run using FastMCP's default transport (STDIO) for MCP clients
     app.run()
 
