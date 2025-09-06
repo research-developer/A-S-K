@@ -1,3 +1,43 @@
+Metadata-Version: 2.4
+Name: a-s-k
+Version: 0.1.0
+Summary: A-S-K: A Semantic Kernel tools and CLIs
+Author: Preston
+License: MIT License
+        
+        Copyright (c) 2025 A-S-K contributors
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/your-org/your-repo
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: typer[all]==0.9.0
+Requires-Dist: pydantic<3,>=2.7
+Requires-Dist: rich<14,>=13.7
+Requires-Dist: openai>=1.35.0
+Requires-Dist: python-dotenv<2,>=1.0
+Requires-Dist: firecrawl-py<5,>=4.0
+Requires-Dist: beautifulsoup4<5,>=4.12
+Dynamic: license-file
+
 # A‑S‑K — A Semantic Kernel (ASK)
 
 A‑S‑K is a practical, testable framework and implementation blueprint for building AI systems that route, verify, and synthesize meaning. It treats language as a layered, compiler‑like stack from glyph geometry to discourse, enabling more transparent research workflows, richer annotations, and graph‑grounded reasoning.
@@ -179,15 +219,7 @@ This project is licensed under the MIT License. See [`LICENSE`](./LICENSE) for d
 
 Prerequisites: Python 3.10+
 
-- Create a virtual environment and install in editable mode (recommended for development):
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install -e .
-```
-
-- Alternatively, just install dependencies without packaging (not recommended for CLI usage):
+- Create a virtual environment and install dependencies:
 
 ```bash
 python3 -m venv .venv
@@ -198,86 +230,15 @@ pip install -r requirements.txt
 
 ## Quickstart
 
-- Decode a word into operators/payloads and a minimal AST (Typer CLI):
+- Decode a word into operators/payloads and a minimal AST:
 
 ```bash
-ask decode ask
-ask decode manipulation --json-out
+PYTHONPATH=src python -m ask.cli decode ask
+PYTHONPATH=src python -m ask.cli decode manipulation --json-out
 ```
 
 - Seed data lives in `data/decoded_words.jsonl` as JSONL records for the Test Bench.
 
-
-## CLI Usage
-
-Below are common tasks across the three available CLIs. All commands assume the package is installed (e.g., `python3 -m pip install -e .`).
-
-### ask (core CLI)
-
-```bash
-# Help and available commands
-ask --help
-
-# Decode a single word (table + minimal AST)
-ask decode ask
-
-# JSON output for scripting
-ask decode manipulation --json-out
-
-# Audit a decoded word with OpenAI (requires OPENAI_API_KEY)
-OPENAI_API_KEY=sk-... ask audit "ask" --model gpt-5-mini
-
-# Extract article content (requires FIRECRAWL_API_KEY)
-FIRECRAWL_API_KEY=fc-... ask extract https://example.com/article
-
-# Batch extract from a file of URLs (one per line)
-FIRECRAWL_API_KEY=fc-... ask extract-batch --file urls.txt > results.json
-```
-
-### ask-enhanced (unified/reconciled CLI)
-
-```bash
-# Help
-ask-enhanced --help
-
-# Decode with richer analysis
-ask-enhanced decode ask
-
-# Verbose analysis with operator principles and payload types
-ask-enhanced decode manipulation --verbose
-
-# JSON output
-ask-enhanced decode understand --json
-
-# List operators or clusters with confidence
-ask-enhanced operators
-ask-enhanced clusters
-
-# Validate the ASK kernel proof and run self-tests
-ask-enhanced validate
-```
-
-### ask-fields (field-based glyph analysis CLI)
-
-```bash
-# Help
-ask-fields --help
-
-# Decode with field-based operators and confidence tracking
-ask-fields decode manipulation --detailed
-
-# Inspect a glyph's field
-ask-fields field k
-
-# System statistics and high-confidence associations
-ask-fields stats
-
-# Teach the system a correct association (adjust confidence)
-ask-fields learn "manipulation" p present --confidence 0.1
-
-# Batch decode words from a file
-ask-fields batch-decode words.txt --output results.json
-```
 
 ## Environment
 

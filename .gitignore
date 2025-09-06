@@ -5,3 +5,7 @@ __pycache__
 src/ask/__pycache__
 .env
 .cache/
+src/ask/.DS_Store
+*/.DS_Store
+*.DS_Store
+.DS_Store

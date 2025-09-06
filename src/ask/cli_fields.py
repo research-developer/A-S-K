@@ -12,7 +12,7 @@ from rich.panel import Panel
 from rich.columns import Columns
 from pathlib import Path
 
-from ask.glyphs_fields import GlyphFieldSystem, FieldBasedDecoder
+from ask.glyph_fields import GlyphFieldSystem, FieldBasedDecoder
 
 console = Console()
 

@@ -461,7 +461,7 @@ class FieldBasedDecoder:
         # Calculate overall confidence
         overall_confidence = sum(confidences) / len(confidences) if confidences else 0.0
         
-        return {
+        return {    
             'word': word,
             'operators': operators,
             'operator_tags': operator_tags,

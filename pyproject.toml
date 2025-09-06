@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "a-s-k"
+version = "0.1.0"
+description = "A-S-K: A Semantic Kernel tools and CLIs"
+readme = "README.md"
+authors = [{ name = "Preston" }]
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+  "typer[all]==0.9.0",
+  "pydantic>=2.7,<3",
+  "rich>=13.7,<14",
+  "openai>=1.35.0",
+  "python-dotenv>=1.0,<2",
+  "firecrawl-py>=4.0,<5",
+  "beautifulsoup4>=4.12,<5",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/your-repo"
+
+[project.scripts]
+ask = "ask.cli:main"
+ask-enhanced = "ask.cli_enhanced:main"
+ask-fields = "ask.cli_fields:cli"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["ask*"]
