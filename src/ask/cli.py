@@ -130,8 +130,12 @@ def audit(
     temperature: Optional[float] = typer.Option(None, help="Optional temperature; omit if model doesn't support"),
 ):
     """Audit a decoded WORD using an OpenAI model (requires OPENAI_API_KEY)."""
-    decoded = decode_word(word)
-    report = audit_decoding(word, decoded, model=model, temperature=temperature)
+    decoded = enhanced_decode_word(word)
+    try:
+        report = audit_decoding(word, decoded, model=model, temperature=temperature)
+    except Exception as e:
+        typer.secho(f"Audit failed: {e}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
     if json_out:
         typer.echo(json.dumps({
             "word": word,

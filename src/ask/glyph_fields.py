@@ -451,12 +451,8 @@ class FieldBasedDecoder:
                 confidences.append(confidence)
                 
                 # Find associated payload
-                j = i + 1
-                # Skip consonant clusters
-                while j < len(word_lower) and word_lower[j] not in 'aeiou':
-                    j += 1
-                
-                i = j
+                # Advance by one to allow subsequent consonants to be processed
+                i += 1
         
         # Calculate overall confidence
         overall_confidence = sum(confidences) / len(confidences) if confidences else 0.0

@@ -216,10 +216,17 @@ def pair_ops_with_payloads(surface: str) -> List[Tuple[str, Optional[str]]]:
     # Sort clusters by length to prefer longer ones first
     cluster_keys = sorted(ENHANCED_CLUSTER_MAP.keys(), key=len, reverse=True)
     
+    pending_vowel: Optional[str] = None
     while i < len(s):
-        # Skip vowels that are not attached to any prior operator (word-initial vowels)
+        # Collect leading (or interstitial) vowel runs and attach to the next operator
         if s[i] in VOWELS:
-            i += 1
+            start_v = i
+            while i < len(s) and s[i] in VOWELS:
+                i += 1
+            # Store to attach to next operator encountered
+            run = s[start_v:i]
+            # If multiple vowel runs appear before an operator, concatenate
+            pending_vowel = (pending_vowel or "") + run
             continue
         
         # Identify next operator token
@@ -239,11 +246,12 @@ def pair_ops_with_payloads(surface: str) -> List[Tuple[str, Optional[str]]]:
                 i += 1
                 continue
         
-        # Collect following vowel run as payload
+        # Collect following vowel run as payload; if none, use any pending leading vowels
         start = i
         while i < len(s) and s[i] in VOWELS:
             i += 1
-        payload = s[start:i] or None
+        payload = s[start:i] or pending_vowel or None
+        pending_vowel = None
         pairs.append((op_token, payload))
     
     return pairs
