@@ -12,3 +12,6 @@ src/ask/.DS_Store
 .chainlit/
 data/glyphs.db
 data/guesses/*
+data/*.db-wal
+data/*.db-shm
+.cache/
