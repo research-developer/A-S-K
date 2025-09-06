@@ -19,6 +19,7 @@ src/ask/factorizer.py
 src/ask/glyph_fields.py
 src/ask/glyphs.py
 src/ask/glyphs_fields.py
+src/ask/merged_glyphs.py
 src/ask/state_syntax.py
 src/ask/core/__init__.py
 src/ask/core/services.py
@@ -28,3 +29,4 @@ src/ask/web/app.py
 tests/test_enhanced.py
 tests/test_factorizer.py
 tests/test_fields.py
+tests/test_readme_examples.py

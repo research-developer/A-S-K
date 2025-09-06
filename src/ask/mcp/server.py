@@ -22,6 +22,8 @@ import os
 import json
 import uuid
 import random
+import errno
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -41,8 +43,24 @@ class ASKMCPEndpoints:
     def __init__(self, persist: Optional[bool] = None) -> None:
         self.services = get_services(persist=persist)
         # Guesses storage directory
-        self.guess_dir = Path("data/guesses")
-        self.guess_dir.mkdir(parents=True, exist_ok=True)
+        override = os.getenv("ASK_GUESS_DIR")
+        self.guess_dir: Optional[Path] = Path(override) if override else Path("data/guesses")
+        self._memory_games: Dict[str, Dict[str, Any]] = {}
+        # Try to create on-disk directory; on read-only FS, fallback to temp dir; otherwise use in-memory
+        try:
+            self.guess_dir.mkdir(parents=True, exist_ok=True)
+        except (OSError, PermissionError) as e:
+            # Read-only or permission denied; try temp dir
+            if isinstance(e, OSError) and getattr(e, 'errno', None) not in (errno.EROFS, errno.EACCES):
+                # Unknown error: still try temp fallback
+                pass
+            try:
+                tmp = Path(tempfile.gettempdir()) / "ask-guesses"
+                tmp.mkdir(parents=True, exist_ok=True)
+                self.guess_dir = tmp
+            except Exception:
+                # Final fallback: disable filesystem persistence
+                self.guess_dir = None
         # Fallback wordlist (lowercase)
         self._fallback_words: List[str] = [
             "ask","matrix","present","line","rotate","transform","stream",
@@ -109,16 +127,31 @@ class ASKMCPEndpoints:
         return tags
 
     def _save_game(self, gid: str, payload: Dict[str, Any]) -> None:
-        tmp = self.guess_dir / f"{gid}.json.tmp"
-        dst = self.guess_dir / f"{gid}.json"
-        with tmp.open("w", encoding="utf-8") as fh:
-            json.dump(payload, fh, indent=2)
-        tmp.replace(dst)
+        # Prefer filesystem when available; otherwise store in memory
+        if self.guess_dir is not None:
+            try:
+                tmp = self.guess_dir / f"{gid}.json.tmp"
+                dst = self.guess_dir / f"{gid}.json"
+                with tmp.open("w", encoding="utf-8") as fh:
+                    json.dump(payload, fh, indent=2)
+                tmp.replace(dst)
+                return
+            except Exception:
+                # Fall back to memory store on any write error
+                pass
+        self._memory_games[gid] = payload
 
     def _load_game(self, gid: str) -> Dict[str, Any]:
-        path = self.guess_dir / f"{gid}.json"
-        with path.open("r", encoding="utf-8") as fh:
-            return json.load(fh)
+        # Try filesystem first
+        if self.guess_dir is not None:
+            path = self.guess_dir / f"{gid}.json"
+            if path.exists():
+                with path.open("r", encoding="utf-8") as fh:
+                    return json.load(fh)
+        # Fallback to memory store
+        if gid in self._memory_games:
+            return dict(self._memory_games[gid])
+        raise FileNotFoundError(gid)
 
     async def decode(self, params: Dict[str, Any]) -> MCPResponse:
         try:
