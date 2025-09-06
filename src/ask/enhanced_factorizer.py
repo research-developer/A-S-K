@@ -7,76 +7,16 @@ from __future__ import annotations
 from typing import List, Dict, Any, Optional, Tuple
 import re
 
+# Source glyph constants from centralized data
+from .glyphs import (
+    VOWELS as _VOWELS_STR,
+    ENHANCED_CLUSTER_MAP,
+    COMPLETE_OPERATOR_MAP,
+    TYPED_PAYLOAD_MAP,
+)
+
 # Vowel set (treat 'y' as vowel payload for USK)
-VOWELS = set("aeiouy")
-
-# Complete operator map based on GLYPHS.md axioms
-COMPLETE_OPERATOR_MAP = {
-    # High confidence (85-95%)
-    "b": {"op": "bind", "principle": "boundary/bulge left", "confidence": 0.85},
-    "d": {"op": "decide", "principle": "delineate/door right", "confidence": 0.85},
-    "g": {"op": "grasp", "principle": "gate/gather return", "confidence": 0.85},
-    "k": {"op": "clamp", "principle": "cut/classify branch", "confidence": 0.95},
-    "m": {"op": "multiply", "principle": "matrix/mass accumulate", "confidence": 0.95},
-    "s": {"op": "stream", "principle": "scan/scatter flow", "confidence": 0.95},
-    "t": {"op": "instantiate", "principle": "terminal/tool pin", "confidence": 0.95},
-    
-    # Medium confidence (75-85%)
-    "c": {"op": "contain", "principle": "curve/gather approach", "confidence": 0.90},
-    "f": {"op": "flow", "principle": "fork/friction split", "confidence": 0.90},
-    "h": {"op": "animate", "principle": "breath/aspiration", "confidence": 0.80},
-    "j": {"op": "project", "principle": "jet/joint trajectory", "confidence": 0.75},
-    "l": {"op": "align", "principle": "line/level lateral", "confidence": 0.90},
-    "n": {"op": "negate", "principle": "next/not alternative", "confidence": 0.85},
-    "p": {"op": "present", "principle": "press/project emerge", "confidence": 0.80},
-    "q": {"op": "query", "principle": "query outlet from whole", "confidence": 0.85},
-    "r": {"op": "rotate", "principle": "route/recur vibration", "confidence": 0.90},
-    "v": {"op": "vector", "principle": "vector/channel directed", "confidence": 0.85},
-    "w": {"op": "web", "principle": "wave/web dual channels", "confidence": 0.90},
-    "x": {"op": "cross", "principle": "nexus intersection", "confidence": 0.85},
-    
-    # Lower confidence (60-75%)
-    "y": {"op": "branch", "principle": "bifurcated split/choice", "confidence": 0.80},
-    "z": {"op": "quantize", "principle": "zip/signal discretize", "confidence": 0.75},
-}
-
-# Enhanced cluster map with verified patterns
-ENHANCED_CLUSTER_MAP = {
-    # Core verified patterns
-    "st": {"ops": ["stream", "instantiate"], "gloss": "flow→point", "confidence": 0.90},
-    "tr": {"ops": ["instantiate", "rotate"], "gloss": "structure→rotate", "confidence": 0.85},
-    "pl": {"ops": ["present", "align"], "gloss": "present→align", "confidence": 0.80},
-    "str": {"ops": ["stream", "instantiate", "rotate"], "gloss": "flow→pin→stabilize", "confidence": 0.85},
-    "spr": {"ops": ["stream", "present", "rotate"], "gloss": "flow→emerge→distribute", "confidence": 0.80},
-    "sk": {"ops": ["stream", "clamp"], "gloss": "scan→select", "confidence": 0.95},
-    "sc": {"ops": ["stream", "clamp"], "gloss": "scan→select (variant)", "confidence": 0.90},
-    
-    # Additional high-confidence patterns
-    "gr": {"ops": ["grasp", "rotate"], "gloss": "grab→turn", "confidence": 0.85},
-    "br": {"ops": ["bind", "rotate"], "gloss": "bind→revolve", "confidence": 0.80},
-    "cr": {"ops": ["contain", "rotate"], "gloss": "encircle", "confidence": 0.80},
-    "dr": {"ops": ["decide", "rotate"], "gloss": "determine→direction", "confidence": 0.75},
-    "fr": {"ops": ["flow", "rotate"], "gloss": "fluid→rotation", "confidence": 0.80},
-    "pr": {"ops": ["present", "rotate"], "gloss": "present→rotation", "confidence": 0.75},
-    
-    # Modal and special patterns
-    "ld": {"ops": ["align", "decide"], "gloss": "align→decide (modal)", "confidence": 0.70},
-    "ght": {"ops": ["grasp", "animate", "instantiate"], "gloss": "grasp→breathe→pin", "confidence": 0.65},
-    "th": {"ops": ["instantiate", "animate"], "gloss": "pin→breathe (abstract)", "confidence": 0.85},
-    "wh": {"ops": ["web", "animate"], "gloss": "web→breathe (query)", "confidence": 0.75},
-    "ch": {"ops": ["contain", "animate"], "gloss": "contain→breathe (check)", "confidence": 0.70},
-    "sh": {"ops": ["stream", "animate"], "gloss": "stream→breathe (smooth)", "confidence": 0.75},
-}
-
-# Typed payload map
-TYPED_PAYLOAD_MAP = {
-    "a": {"type": "base_type", "tag": "base", "principle": "aperture/origin", "confidence": 0.95},
-    "e": {"type": "relation", "tag": "relational", "principle": "reflexive-relational", "confidence": 0.90},
-    "i": {"type": "index", "tag": "index", "principle": "minimal unit", "confidence": 0.95},
-    "o": {"type": "container", "tag": "object", "principle": "wholeness", "confidence": 0.90},
-    "u": {"type": "struct", "tag": "capacity", "principle": "root/union", "confidence": 0.85},
-    "y": {"type": "branch", "tag": "branch", "principle": "bifurcated", "confidence": 0.80},
-}
+VOWELS = set(_VOWELS_STR)
 
 # Common morphological patterns (English-centric for MVP)
 COMMON_PREFIXES = {

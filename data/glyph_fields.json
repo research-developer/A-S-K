@@ -289,9 +289,11 @@
           "contexts": []
         },
         "clamp": {
-          "confidence": 0.6,
-          "evidence_count": 1,
+          "confidence": 0.6666666666666667,
+          "evidence_count": 2,
           "contexts": [
+            "ask",
+            "ask",
             "ask"
           ]
         },
@@ -549,12 +551,14 @@
     "s": {
       "tags": {
         "stream": {
-          "confidence": 0.9367099567099569,
-          "evidence_count": 10,
+          "confidence": 0.9974059274059276,
+          "evidence_count": 14,
           "contexts": [
             "stream",
             "strike",
             "slow",
+            "ask",
+            "ask",
             "ask",
             "ask"
           ]
@@ -944,7 +948,7 @@
       "k": 0.5
     },
     "clamp": {
-      "k": 0.6
+      "k": 0.6666666666666667
     },
     "kindle": {
       "k": 0.5
@@ -1070,7 +1074,7 @@
       "r": 0.5
     },
     "stream": {
-      "s": 0.9367099567099569
+      "s": 0.9974059274059276
     },
     "scatter": {
       "s": 0.5

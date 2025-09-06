@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from typing import Optional, List
+import asyncio
 
 import typer
 from rich import print
@@ -9,7 +10,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 
-from .audit import audit_decoding
+from .audit import audit_decoding, audit_guess, audit_guess_async
 from .extractor import extract_article
 from .enhanced_factorizer import (
     enhanced_decode_word,
@@ -128,6 +129,13 @@ def audit(
     model: str = typer.Option("gpt-5-mini", help="OpenAI model to use"),
     json_out: bool = typer.Option(True, help="Emit JSON (recommended)"),
     temperature: Optional[float] = typer.Option(None, help="Optional temperature; omit if model doesn't support"),
+    guess: Optional[int] = typer.Option(
+        None,
+        "--guess",
+        "-g",
+        help="Also request top-K guesses from descriptors only. Use --guess for default K=10 or --guess 5 to set K.",
+        flag_value=10,
+    ),
 ):
     """Audit a decoded WORD using an OpenAI model (requires OPENAI_API_KEY)."""
     decoded = enhanced_decode_word(word)
@@ -136,15 +144,124 @@ def audit(
     except Exception as e:
         typer.secho(f"Audit failed: {e}", fg=typer.colors.RED)
         raise typer.Exit(code=1)
+    # Print the primary audit result first
+    payload = {
+        "word": word,
+        "decoded": decoded,
+        "audit": report,
+    }
     if json_out:
-        typer.echo(json.dumps({
-            "word": word,
-            "decoded": decoded,
-            "audit": report,
-        }, indent=2))
+        typer.echo(json.dumps(payload, indent=2))
     else:
         console.print("[bold]Audit Report[/bold]")
         console.print(report)
+
+    # Optional: stage-1 guessing (descriptor-only)
+    k: Optional[int] = guess  # when provided without value, Typer/Click sets flag_value=10
+    if k:
+        try:
+            res = audit_guess(decoded, k=k, model=model, temperature=temperature)
+        except Exception as e:
+            typer.secho(f"Guessing failed: {e}", fg=typer.colors.RED)
+            raise typer.Exit(code=1)
+        if json_out:
+            # emit only the guesses array to keep stdout machine-consumable; user can combine as they like
+            typer.echo(json.dumps({"guesses": res.get("guesses", [])}, indent=2))
+        else:
+            console.print(f"\n[bold]LLM Guesses (k={k}):[/bold]")
+            for idx, g in enumerate(res.get("guesses", []), start=1):
+                console.print(f"  {idx}. {g}")
+
+
+@app.command(name="audit-guess")
+def audit_guess_cmd(
+    words: List[str] = typer.Argument(None, help="One or more words to guess (surface will NOT be sent to the model)"),
+    file: Optional[str] = typer.Option(None, "--file", "-f", help="Path to file containing words, one per line"),
+    guesses: int = typer.Option(10, "--guesses", "-k", help="Top-K guesses to return"),
+    model: str = typer.Option("gpt-5-mini", help="OpenAI model to use"),
+    temperature: Optional[float] = typer.Option(None, help="Optional temperature; omit if model doesn't support"),
+    json_out: bool = typer.Option(True, help="Emit JSON (recommended)"),
+    use_async: bool = typer.Option(True, "--async", help="Use async batching when multiple inputs provided"),
+):
+    """Stage-1 auditor: Send ONLY descriptors to the model and request top-K surface word guesses.
+
+    - For multiple inputs, you can pass words as arguments and/or via --file.
+    - Uses async batching by default for throughput when multiple inputs are given.
+    """
+    inputs: List[str] = []
+    if file:
+        try:
+            with open(file, "r", encoding="utf-8") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    inputs.append(line)
+        except Exception as e:
+            typer.secho(f"Failed to read file {file}: {e}", fg=typer.colors.RED)
+            raise typer.Exit(code=1)
+    if words:
+        inputs.extend(words)
+    if not inputs:
+        typer.secho("No words provided. Pass one or more words or use --file.", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+
+    # Do not send the surface forms to the model; only descriptors derived from the enhanced decoder
+    from .enhanced_factorizer import enhanced_decode_word  # local import to avoid cycles
+
+    # Single input: do simple sync call to avoid event loop overhead
+    if len(inputs) == 1 or not use_async:
+        w = inputs[0]
+        decoded = enhanced_decode_word(w)
+        try:
+            res = audit_guess(decoded, k=guesses, model=model, temperature=temperature)
+        except Exception as e:
+            typer.secho(f"Audit-guess failed: {e}", fg=typer.colors.RED)
+            raise typer.Exit(code=1)
+        payload = {"word": w, "guesses": res.get("guesses", [])}
+        typer.echo(json.dumps(payload if json_out else res, indent=2) if json_out else ", ".join(payload["guesses"]))
+        raise typer.Exit()
+
+    # Multiple inputs: async batch
+    async def _run_batch():
+        tasks = []
+        decodeds = []
+        for w in inputs:
+            d = enhanced_decode_word(w)
+            decodeds.append((w, d))
+            tasks.append(audit_guess_async(d, k=guesses, model=model, temperature=temperature))
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        out: List[dict] = []
+        for (w, _), res in zip(decodeds, results):
+            if isinstance(res, Exception):
+                out.append({"word": w, "error": str(res)})
+            else:
+                out.append({"word": w, "guesses": res.get("guesses", [])})
+        return out
+
+    try:
+        out = asyncio.run(_run_batch())
+    except RuntimeError:
+        # In case of already running loop (e.g., in notebooks), fallback to new loop
+        loop = asyncio.new_event_loop()
+        try:
+            asyncio.set_event_loop(loop)
+            out = loop.run_until_complete(_run_batch())
+        finally:
+            loop.close()
+    except Exception as e:
+        typer.secho(f"Audit-guess batch failed: {e}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
+
+    if json_out:
+        typer.echo(json.dumps(out, indent=2))
+    else:
+        # Print simple lines: word: g1, g2, ...
+        for item in out:
+            if "error" in item:
+                typer.echo(f"{item['word']}: ERROR {item['error']}")
+            else:
+                typer.echo(f"{item['word']}: {', '.join(item.get('guesses', []))}")
 
 
 @app.command()
