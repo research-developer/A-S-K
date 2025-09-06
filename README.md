@@ -250,6 +250,46 @@ ask validate
 ask batch "ask,think,understand,manipulation" --json
 ```
 
+### MCP Server (FastMCP)
+
+You can expose A‑S‑K over the Model Context Protocol (MCP) to integrate with MCP‑compatible clients.
+
+Prerequisites:
+
+- Install the package (editable mode recommended during development):
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -e .
+```
+
+- Install FastMCP runtime:
+
+```bash
+pip install fastmcp
+```
+
+Run the server over stdio:
+
+```bash
+ask-mcp
+```
+
+The server exposes two tools:
+
+- `decode(word: str)` → returns the enhanced decode JSON
+- `syntax(word: str, language: str = "english")` → returns USK syntax with elements and morphology
+
+Notes:
+
+- Set `ASK_GLYPH_PERSIST=1` to enable on‑disk learning for glyph field confidences used by the parser. This maps to the `persist` flag in the underlying services via `create_mcp_server()`.
+- If `fastmcp` is not installed, `ask-mcp` will print a helpful message explaining how to install it.
+
+Client integration:
+
+- Configure your MCP client to launch `ask-mcp` as a stdio server. In many editors/clients, this is set in an MCP server registry/config file with a command entry of `ask-mcp` and no args.
+
 ### ask-fields (field-based glyph analysis CLI)
 
 ```bash

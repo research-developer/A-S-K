@@ -279,6 +279,7 @@
           "confidence": 0.5,
           "evidence_count": 0,
           "contexts": [
+            "ask",
             "ask"
           ]
         },
@@ -291,6 +292,12 @@
           "confidence": 0.7566666666666667,
           "evidence_count": 4,
           "contexts": [
+            "ask",
+            "ask",
+            "ask",
+            "ask",
+            "ask",
+            "ask",
             "ask"
           ]
         },
@@ -554,6 +561,12 @@
             "stream",
             "strike",
             "slow",
+            "ask",
+            "ask",
+            "ask",
+            "ask",
+            "ask",
+            "ask",
             "ask"
           ]
         },

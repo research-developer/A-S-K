@@ -41,7 +41,13 @@ class ASKMCPEndpoints:
             if not word:
                 return MCPResponse(ok=False, error="Missing 'word' parameter")
             res = self.services.decode(word)
-            return MCPResponse(ok=True, data=res.decoded)
+            seq = res.decoded.get("sequence") or []
+            # Minimal linear output: only types and head linkage
+            minimal = [{
+                "type": tok.get("type"),
+                "head_id": tok.get("head_id"),
+            } for tok in seq]
+            return MCPResponse(ok=True, data={"sequence": minimal})
         except Exception as e:
             return MCPResponse(ok=False, error=str(e))
 
@@ -52,14 +58,12 @@ class ASKMCPEndpoints:
             if not word:
                 return MCPResponse(ok=False, error="Missing 'word' parameter")
             res = self.services.syntax(word, language=language)
-            return MCPResponse(ok=True, data={
-                "word": res.word,
-                "language": res.language,
-                "syntax": res.syntax,
-                "elements": res.elements,
-                "overall_confidence": res.overall_confidence,
-                "morphology": res.morphology,
-            })
+            seq = getattr(res, "sequence", []) or []
+            minimal = [{
+                "type": tok.get("type"),
+                "head_id": tok.get("head_id"),
+            } for tok in seq]
+            return MCPResponse(ok=True, data={"sequence": minimal})
         except Exception as e:
             return MCPResponse(ok=False, error=str(e))
 

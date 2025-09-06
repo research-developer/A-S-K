@@ -26,6 +26,7 @@ Homepage = "https://github.com/your-org/your-repo"
 [project.scripts]
 ask = "ask.cli:main"
 ask-fields = "ask.cli_fields:cli"
+ask-mcp = "ask.mcp.fastmcp_server:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
