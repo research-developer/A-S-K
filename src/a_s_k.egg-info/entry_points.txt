@@ -1,4 +1,3 @@
 [console_scripts]
 ask = ask.cli:main
-ask-enhanced = ask.cli_enhanced:main
 ask-fields = ask.cli_fields:cli

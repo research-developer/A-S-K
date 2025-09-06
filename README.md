@@ -198,11 +198,11 @@ pip install -r requirements.txt
 
 ## Quickstart
 
-- Decode a word into operators/payloads and a minimal AST (Typer CLI):
+- Decode a word using the unified CLI (enhanced by default):
 
 ```bash
 ask decode ask
-ask decode manipulation --json-out
+ask decode manipulation --json
 ```
 
 - Seed data lives in `data/decoded_words.jsonl` as JSONL records for the Test Bench.
@@ -210,19 +210,25 @@ ask decode manipulation --json-out
 
 ## CLI Usage
 
-Below are common tasks across the three available CLIs. All commands assume the package is installed (e.g., `python3 -m pip install -e .`).
+All commands assume the package is installed (e.g., `python3 -m pip install -e .`).
 
-### ask (core CLI)
+### ask (unified CLI)
 
 ```bash
 # Help and available commands
 ask --help
 
-# Decode a single word (table + minimal AST)
+# Decode a single word (enhanced view)
 ask decode ask
 
+# Minimal view (no morphology block or details)
+ask decode manipulation --simple
+
 # JSON output for scripting
-ask decode manipulation --json-out
+ask decode manipulation --json
+
+# Verbose analysis with operator principles and payload types
+ask decode manipulation --verbose
 
 # Audit a decoded word with OpenAI (requires OPENAI_API_KEY)
 OPENAI_API_KEY=sk-... ask audit "ask" --model gpt-5-mini
@@ -232,29 +238,16 @@ FIRECRAWL_API_KEY=fc-... ask extract https://example.com/article
 
 # Batch extract from a file of URLs (one per line)
 FIRECRAWL_API_KEY=fc-... ask extract-batch --file urls.txt > results.json
-```
-
-### ask-enhanced (unified/reconciled CLI)
-
-```bash
-# Help
-ask-enhanced --help
-
-# Decode with richer analysis
-ask-enhanced decode ask
-
-# Verbose analysis with operator principles and payload types
-ask-enhanced decode manipulation --verbose
-
-# JSON output
-ask-enhanced decode understand --json
 
 # List operators or clusters with confidence
-ask-enhanced operators
-ask-enhanced clusters
+ask operators
+ask clusters
 
 # Validate the ASK kernel proof and run self-tests
-ask-enhanced validate
+ask validate
+
+# Batch decode
+ask batch "ask,think,understand,manipulation" --json
 ```
 
 ### ask-fields (field-based glyph analysis CLI)

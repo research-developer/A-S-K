@@ -25,7 +25,6 @@ Homepage = "https://github.com/your-org/your-repo"
 
 [project.scripts]
 ask = "ask.cli:main"
-ask-enhanced = "ask.cli_enhanced:main"
 ask-fields = "ask.cli_fields:cli"
 
 [tool.setuptools]
