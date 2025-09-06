@@ -162,6 +162,27 @@ Additional tests: cross‑lingual operator invariants; vowel‑type priors in di
 - Reviewer playbooks and inter‑annotator agreement metrics for function words.
 - Cross‑family replication (Semitic root‑and‑pattern, Sinitic morphosyllabic, Uralic).
 
+### R&D: Positional Weighting and Corpus Tests (preregistered heuristics)
+
+We will test whether letter position modulates operator/payload influence and whether corpus‑level distributions support the USK model.
+
+- Positional weighting hypothesis:
+  - Apos (aperture): central Gaussian window (PVL/OVP) — higher processing near word center.
+  - Bpos (diagnosticity): edge boost (U‑shape) — first/last letters carry more identity.
+  - Net W(i) = normalize(Apos×Bpos); used to weight operator contributions by position.
+- Corpus hypotheses (falsifiable):
+  - T‑density higher in academic/technical vs fiction (structural instantiation).
+  - str-/tr-/ct clusters enriched in legal/engineering/science vs fiction (structure/constraint).
+  - sk/sc clusters enriched in expository/scientific sections vs narrative (scan→select).
+  - Vowel payload distributions differ by genre: i in code/docs; a in philosophy; o in ontology/object‑oriented.
+  - -ion nominalizations enriched in academic texts; -ould modals enriched in dialogue/fiction.
+  - Operator‑path entropy higher in technical prose; lexical entropy lower.
+- Implementation plan:
+  - Add `src/ask/position_weights.py` (Apos/Bpos/W(i)).
+  - Add `src/ask/metrics.py` to compute glyph/cluster/path/diphthong/nominalization features.
+  - Provide a notebook `notebooks/01_preregistered_tests.ipynb` with α=0.01, FDR correction, effect sizes, Bayes factors.
+  - CLI: `ask corpus-stats --input <dir> --out metrics.jsonl`.
+
 
 ## Contributing
 
