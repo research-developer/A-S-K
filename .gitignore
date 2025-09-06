@@ -1,2 +1,5 @@
 .vercel
 README.html
+.data
+__pycache__
+src/ask/__pycache__

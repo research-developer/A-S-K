@@ -172,7 +172,32 @@ Additional tests: cross‑lingual operator invariants; vowel‑type priors in di
 
 ## License
 
-TBD. Choose a license (e.g., MIT/Apache‑2.0) aligned with your intended use and contributions.
+This project is licensed under the MIT License. See [`LICENSE`](./LICENSE) for details.
+
+
+## Install
+
+Prerequisites: Python 3.10+
+
+- Create a virtual environment and install dependencies:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+
+## Quickstart
+
+- Decode a word into operators/payloads and a minimal AST:
+
+```bash
+PYTHONPATH=src python -m ask.cli decode ask
+PYTHONPATH=src python -m ask.cli decode manipulation --json-out
+```
+
+- Seed data lives in `data/decoded_words.jsonl` as JSONL records for the Test Bench.
 
 
 ## Project Structure
@@ -180,10 +205,21 @@ TBD. Choose a license (e.g., MIT/Apache‑2.0) aligned with your intended use an
 ```
 A-S-K/
 ├── README.md           # This file: overview and synthesis
-├── GLYPHS.md          # The Standard Model of Glyphic Axioms
-├── examples/          # Test cases and worked examples
-├── data/              # Decoded word corpus and test sets
-└── src/               # Implementation code (coming soon)
+├── GLYPHS.md           # The Standard Model of Glyphic Axioms
+├── LICENSE             # MIT license
+├── CONTRIBUTING.md     # How to contribute, dev setup
+├── requirements.txt    # Runtime deps (typer, pydantic, rich)
+├── examples/           # Notebooks and runnable scripts
+├── data/               # Decoded word corpus and test sets
+│   └── decoded_words.jsonl
+├── tests/              # Unit tests (pytest)
+└── src/                # Implementation code
+    └── ask/
+        ├── __init__.py
+        ├── glyphs.py          # Operator/payload maps and clusters
+        ├── factorizer.py      # decode_word(), extraction helpers
+        ├── compose.py         # Minimal AST-like composition
+        └── cli.py             # Typer CLI (python -m ask.cli)
 ```
 
 

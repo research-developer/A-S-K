@@ -621,13 +621,16 @@ LETTERS: Dict[str, Letter] = {
     "J": Letter(symbol="J", display_name="J", layer_a=LayerA(role=LayerARole.none_), layer_b=None, notes="Untheorized in current spec."),
     "P": Letter(symbol="P", display_name="P", layer_a=LayerA(role=LayerARole.none_), layer_b=None, notes="Untheorized in current spec."),
     "Q": Letter(symbol="Q", display_name="Q", layer_a=LayerA(role=LayerARole.none_), layer_b=None, notes="Untheorized in current spec."),
-    "W": Letter(symbol="W", display_name="W", layer_a=LayerARole.none_, layer_b=None, notes="Untheorized in current spec."),  # type: ignore
-    "Z": Letter(symbol="Z", display_name="Z", layer_a=LayerARole.none_, layer_b=None, notes="Untheorized in current spec."),  # type: ignore
+    "W": Letter(symbol="W", display_name="W", layer_a=LayerA(role=LayerARole.none_), layer_b=None, notes="Untheorized in current spec."), # manually fixed
+    "Z": Letter(symbol="Z", display_name="Z", layer_a=LayerA(role=LayerARole.none_), layer_b=None, notes="Untheorized in current spec.") # manually fixed``
 }
 
 # Fix two entries created with wrong type above due to shorthand:
-LETTERS["W"] = Letter(symbol="W", display_name="W", layer_a=LayerA(role=LayerARole.none_), layer_b=None, notes="Untheorized in current spec.")
-LETTERS["Z"] = Letter(symbol="Z", display_name="Z", layer_a=LayerA(role=LayerARole.none_), layer_b=None, notes="Untheorized in current spec.")
+
+# Fix two entries created with wrong type above due to shorthand:
+# LETTERS["W"] = Letter(symbol="W", display_name="W", layer_a=LayerA(role=LayerARole.none_), layer_b=None, notes="Untheorized in current spec.")
+# LETTERS["Z"] = Letter(symbol="Z", display_name="Z", layer_a=LayerA(role=LayerARole.none_), layer_b=None, notes="Untheorized in current spec.")
+
 
 
 # Optional: quick dump helper

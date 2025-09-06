@@ -1,0 +1,4 @@
+{"word": "ask", "category": "verb", "operators": ["sk"], "payloads": ["a"], "gloss": "instantiate unknown → stream → clamp to answer", "provenance": "OE ascian; Proto-Gmc *aiskōną", "confidence": "H"}
+{"word": "strict", "category": "adj", "operators": ["str", "ct"], "payloads": ["i"], "gloss": "stream → instantiate → rotate; cut", "provenance": "Latin strictus", "confidence": "M"}
+{"word": "apply", "category": "verb", "operators": ["pl"], "payloads": ["a", "y"], "gloss": "present → align to base; branch", "provenance": "Latin applicare", "confidence": "M"}
+{"word": "convert", "category": "verb", "operators": ["nv", "rt"], "payloads": ["o", "e"], "gloss": "negate/vector; rotate", "provenance": "Latin convertere", "confidence": "L"}
