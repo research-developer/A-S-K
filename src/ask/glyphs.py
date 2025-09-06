@@ -4,10 +4,10 @@ from __future__ import annotations
 # Vowels as typed payloads
 PAYLOAD_MAP = {
     "a": {"type": "base_type", "tag": "base", "principle": "aperture/origin"},
-    "e": {"type": "relation", "tag": "relational", "principle": "reflexive-relational"},
-    "i": {"type": "index", "tag": "index", "principle": "minimal unit/index"},
-    "o": {"type": "container", "tag": "object", "principle": "wholeness/container"},
-    "u": {"type": "struct", "tag": "capacity", "principle": "root/union/channel"},
+    "e": {"type": "encompass", "tag": "relate", "principle": "reflexive-relational"},
+    "i": {"type": "identify", "tag": "index", "principle": "minimal unit/index"},
+    "o": {"type": "whole", "tag": "object", "principle": "wholeness/container"},
+    "u": {"type": "union", "tag": "capacity", "principle": "root/union/channel"},
     "y": {"type": "branch", "tag": "branch", "principle": "bifurcated value"},
 }
 
@@ -21,12 +21,12 @@ OPERATOR_MAP = {
     "h": "animate",
     "j": "project",
     "k": "clamp",
-    "l": "align",
+    "l": "level",
     "m": "multiply",
     "n": "negate",
     "p": "present",
     "q": "query",
-    "r": "rotate",
+    "r": "relate",
     "s": "stream",
     "t": "instantiate",
     "v": "vector",

@@ -59,7 +59,12 @@ def decode(
     table.add_row("Operators", " → ".join(decoded["operators"]) or "none")
     
     # Payloads
-    payload_str = ", ".join(decoded["payloads"]) or "none"
+    # Handle possible None entries in payloads
+    payload_items = decoded.get("payloads", [])
+    if payload_items:
+        payload_str = ", ".join([(p if isinstance(p, str) else "—") for p in payload_items])
+    else:
+        payload_str = "none"
     table.add_row("Payloads", payload_str)
     
     # Gloss
@@ -264,8 +269,15 @@ def batch(
 
 
 def main():
-    """Entry point for the enhanced CLI."""
-    app()
+    """Deprecated: delegate to unified ask CLI."""
+    try:
+        import typer
+        typer.secho("ask-enhanced is deprecated; delegating to 'ask' (unified CLI)", fg=typer.colors.YELLOW)
+    except Exception:
+        pass
+    # Delegate
+    from ask.cli import main as unified_main
+    unified_main()
 
 
 if __name__ == "__main__":
