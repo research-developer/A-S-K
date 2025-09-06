@@ -13,11 +13,10 @@ from rich.panel import Panel
 from .audit import audit_decoding, audit_guess, audit_guess_async
 from .extractor import extract_article
 from .enhanced_factorizer import (
-    enhanced_decode_word,
     validate_ask_kernel,
-    COMPLETE_OPERATOR_MAP,
-    ENHANCED_CLUSTER_MAP,
 )
+from .core import get_services
+from .core.services import TYPE_COLORS
 
 app = typer.Typer(add_completion=False, help="A-S-K: Unified CLI (enhanced by default)")
 console = Console()
@@ -34,7 +33,8 @@ def decode(
 
     By default prints the enhanced view. Use --simple for a compact view, or --json for structured output.
     """
-    decoded = enhanced_decode_word(word)
+    services = get_services()
+    decoded = services.decode(word).decoded
 
     if json_out:
         typer.echo(json.dumps(decoded, indent=2))
@@ -93,10 +93,9 @@ def decode(
         # Operator details
         op_details = []
         for op in decoded.get("operators", []):
-            for ch, info in COMPLETE_OPERATOR_MAP.items():
-                if info["op"] == op:
-                    op_details.append(f"  {op}: {info['principle']} [dim](conf: {info['confidence']:.0%})[/dim]")
-                    break
+            op_info = services.get_operator_info(op)
+            if op_info:
+                op_details.append(f"  {op}: {op_info['principle']} [dim](conf: {op_info['confidence']:.0%})[/dim]")
         if op_details:
             console.print("\n[cyan]Operators:[/cyan]")
             for line in op_details:
@@ -296,29 +295,15 @@ def syntax(
     Use --persist to enable on-disk learning of glyph field confidences (overrides ASK_GLYPH_PERSIST).
     """
     # Local imports to avoid cycles
-    from .state_syntax import USKParser, TYPE_COLORS
-    from .glyph_fields import GlyphFieldSystem
-
-    glyph_system = GlyphFieldSystem(persist=persist)
-    parser = USKParser(glyph_system=glyph_system)
-    result = parser.parse_word(word, language=language)
+    services = get_services(persist=persist)
+    result = services.syntax(word, language=language)
 
     if json_out:
         payload = {
-            "word": word,
-            "language": language,
-            "usk": result.to_usk_syntax(),
-            "elements": [
-                {
-                    "surface": e.surface,
-                    "type": e.element_type.value,
-                    "semantic": e.semantic,
-                    "confidence": e.confidence,
-                    "position": e.position,
-                    "state": str(e.state) if e.state else None,
-                }
-                for e in result.elements
-            ],
+            "word": result.word,
+            "language": result.language,
+            "usk": result.syntax,
+            "elements": result.elements,
             "overall_confidence": result.overall_confidence,
             "morphology": result.morphology,
         }
@@ -337,7 +322,7 @@ def syntax(
     table = Table(title=f"[bold cyan]USK Syntax: {word}[/bold cyan]")
     table.add_column("Component", style="cyan")
     table.add_column("Value", style="white")
-    table.add_row("Syntax", result.to_usk_syntax())
+    table.add_row("Syntax", result.syntax)
     table.add_row("Confidence", f"{result.overall_confidence:.1%}")
     morph = result.morphology or {}
     morph_str = f"prefix: {morph.get('prefix') or '—'}, root: {morph.get('root')}, suffix: {morph.get('suffix') or '—'}"
@@ -357,14 +342,25 @@ def syntax(
             ElementType.STATE: "state",
         }
         for e in result.elements:
-            short_type = type_map.get(e.element_type, "?")
-            semantic = e.semantic
-            if e.element_type == ElementType.PAYLOAD and isinstance(semantic, str) and semantic.startswith("struct("):
+            # Elements are dicts in the services payload
+            semantic = e.get("semantic")
+            state_val = e.get("state")
+            position = e.get("position")
+            confidence = e.get("confidence", 0.0)
+            surface = e.get("surface")
+            # Infer type for coloring
+            short_type = "val"
+            if "+" in (semantic or ""):
                 short_type = "struct"
+            elif semantic in ("matrix","negate","present","line","transform","rotate","stream","gather","define","resonate"):
+                short_type = "op"
+            # functions are recognized clusters; best-effort check
+            elif surface and len(surface) > 1 and semantic not in ("a","e","i","o","u"):
+                short_type = "func"
             color = TYPE_COLORS.get(short_type, None)
             colored_sem = f"[{color}]{semantic}[/{color}]" if color else semantic
-            state_info = f" [{e.state}]" if e.state and str(e.state) != "?" else ""
-            console.print(f"  {e.surface}: {colored_sem}{state_info} [dim]({e.position}, conf {e.confidence:.0%})[/dim]")
+            state_info = f" [{state_val}]" if state_val and str(state_val) != "?" else ""
+            console.print(f"  {surface}: {colored_sem}{state_info} [dim]({position}, conf {confidence:.0%})[/dim]")
 
 @app.command()
 def clusters():
