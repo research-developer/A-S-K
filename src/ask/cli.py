@@ -285,6 +285,88 @@ def operators(
 
 
 @app.command()
+def syntax(
+    word: str,
+    language: str = typer.Option("english", "--language", "-l", help="Language of the word (english|latin)"),
+    json_out: bool = typer.Option(False, "--json", help="Output as JSON"),
+    persist: bool = typer.Option(False, "--persist", help="Enable saving/loading glyph field confidence data"),
+):
+    """Parse a WORD into USK syntax using the state-aware parser.
+
+    Use --persist to enable on-disk learning of glyph field confidences (overrides ASK_GLYPH_PERSIST).
+    """
+    # Local imports to avoid cycles
+    from .state_syntax import USKParser, TYPE_COLORS
+    from .glyph_fields import GlyphFieldSystem
+
+    glyph_system = GlyphFieldSystem(persist=persist)
+    parser = USKParser(glyph_system=glyph_system)
+    result = parser.parse_word(word, language=language)
+
+    if json_out:
+        payload = {
+            "word": word,
+            "language": language,
+            "usk": result.to_usk_syntax(),
+            "elements": [
+                {
+                    "surface": e.surface,
+                    "type": e.element_type.value,
+                    "semantic": e.semantic,
+                    "confidence": e.confidence,
+                    "position": e.position,
+                    "state": str(e.state) if e.state else None,
+                }
+                for e in result.elements
+            ],
+            "overall_confidence": result.overall_confidence,
+            "morphology": result.morphology,
+        }
+        typer.echo(json.dumps(payload, indent=2))
+        return
+
+    # Legend panel
+    legend_lines = []
+    # Only show the four primary types as requested
+    for key, label in [("val", "Value"), ("op", "Operator"), ("func", "Function"), ("struct", "Struct")]:
+        color = TYPE_COLORS.get(key, "white")
+        legend_lines.append(f"[{color}]{label}[/{color}]")
+    legend_text = "  ".join(legend_lines)
+    console.print(Panel(legend_text, title="Legend", border_style="cyan"))
+
+    table = Table(title=f"[bold cyan]USK Syntax: {word}[/bold cyan]")
+    table.add_column("Component", style="cyan")
+    table.add_column("Value", style="white")
+    table.add_row("Syntax", result.to_usk_syntax())
+    table.add_row("Confidence", f"{result.overall_confidence:.1%}")
+    morph = result.morphology or {}
+    morph_str = f"prefix: {morph.get('prefix') or '—'}, root: {morph.get('root')}, suffix: {morph.get('suffix') or '—'}"
+    table.add_row("Morphology", morph_str)
+    console.print(table)
+
+    # Brief breakdown
+    if result.elements:
+        console.print("\n[bold]Elements:[/bold]")
+        # local mapping to shorten types for color selection
+        from .state_syntax import ElementType
+        type_map = {
+            ElementType.OPERATOR: "op",
+            ElementType.FUNCTION: "func",
+            ElementType.PAYLOAD: "val",
+            ElementType.MODIFIER: "mod",
+            ElementType.STATE: "state",
+        }
+        for e in result.elements:
+            short_type = type_map.get(e.element_type, "?")
+            semantic = e.semantic
+            if e.element_type == ElementType.PAYLOAD and isinstance(semantic, str) and semantic.startswith("struct("):
+                short_type = "struct"
+            color = TYPE_COLORS.get(short_type, None)
+            colored_sem = f"[{color}]{semantic}[/{color}]" if color else semantic
+            state_info = f" [{e.state}]" if e.state and str(e.state) != "?" else ""
+            console.print(f"  {e.surface}: {colored_sem}{state_info} [dim]({e.position}, conf {e.confidence:.0%})[/dim]")
+
+@app.command()
 def clusters():
     """List all recognized consonant clusters and their operations."""
     table = Table(title="[bold cyan]Consonant Clusters[/bold cyan]")

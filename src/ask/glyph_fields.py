@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from collections import defaultdict
 import json
 from pathlib import Path
+import os
 
 @dataclass
 class OperatorTag:
@@ -133,10 +134,16 @@ class GlyphFieldSystem:
         'zigzag', 'zero', 'zone', 'zenith', 'zephyr', 'zip', 'oscillate'
     ]
     
-    def __init__(self, data_path: Optional[Path] = None):
+    def __init__(self, data_path: Optional[Path] = None, persist: Optional[bool] = None):
         self.fields: Dict[str, OperatorField] = {}
         self.tag_associations: Dict[str, Dict[str, float]] = defaultdict(dict)  # tag -> {glyph: confidence}
         self.data_path = data_path or Path('/Users/preston/Projects/A-S-K/data/glyph_fields.json')
+        # Default to environment variable if not explicitly provided
+        if persist is None:
+            env_val = os.getenv('ASK_GLYPH_PERSIST', '0').strip().lower()
+            self.persist = env_val in ('1', 'true', 'yes', 'on')
+        else:
+            self.persist = bool(persist)
         self.initialize_fields()
         if self.persist:
             self.load_confidence_data()
