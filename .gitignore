@@ -9,3 +9,4 @@ src/ask/.DS_Store
 */.DS_Store
 *.DS_Store
 .DS_Store
+.chainlit/

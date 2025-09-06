@@ -1,0 +1,3710 @@
+{
+  "sources": {
+    "glyphs_path": "/Users/preston/Projects/A-S-K/data/glyphs.json",
+    "glyph_fields_path": "/Users/preston/Projects/A-S-K/data/glyph_fields.json"
+  },
+  "merged": {
+    "vowels": "aeiouy",
+    "payload_map": {
+      "a": {
+        "type": "base_type",
+        "tag": "base",
+        "principle": "aperture/origin"
+      },
+      "e": {
+        "type": "encompass",
+        "tag": "relate",
+        "principle": "reflexive-relational"
+      },
+      "i": {
+        "type": "identify",
+        "tag": "index",
+        "principle": "minimal unit/index"
+      },
+      "o": {
+        "type": "whole",
+        "tag": "object",
+        "principle": "wholeness/container"
+      },
+      "u": {
+        "type": "union",
+        "tag": "capacity",
+        "principle": "root/union/channel"
+      },
+      "y": {
+        "type": "branch",
+        "tag": "branch",
+        "principle": "bifurcated value"
+      }
+    },
+    "operator_map": {
+      "b": "bind",
+      "c": "contain",
+      "d": "decide",
+      "f": "flow",
+      "g": "grasp",
+      "h": "animate",
+      "j": "project",
+      "k": "clamp",
+      "l": "align",
+      "m": "multiply",
+      "n": "in",
+      "p": "present",
+      "q": "query",
+      "r": "rotate",
+      "s": "stream",
+      "t": "instantiate",
+      "v": "vector",
+      "w": "web",
+      "x": "cross",
+      "z": "quantize"
+    },
+    "cluster_map": {
+      "st": [
+        "stream",
+        "instantiate"
+      ],
+      "tr": [
+        "instantiate",
+        "rotate"
+      ],
+      "pl": [
+        "present",
+        "align"
+      ],
+      "str": [
+        "stream",
+        "instantiate",
+        "rotate"
+      ],
+      "spr": [
+        "stream",
+        "present",
+        "rotate"
+      ],
+      "sk": [
+        "stream",
+        "clamp"
+      ],
+      "sc": [
+        "stream",
+        "clamp"
+      ]
+    },
+    "enhanced_cluster_map": {
+      "st": {
+        "ops": [
+          "stream",
+          "instantiate"
+        ],
+        "gloss": "flow→point",
+        "confidence": 0.9
+      },
+      "tr": {
+        "ops": [
+          "instantiate",
+          "rotate"
+        ],
+        "gloss": "structure→rotate",
+        "confidence": 0.85
+      },
+      "pl": {
+        "ops": [
+          "present",
+          "align"
+        ],
+        "gloss": "present→align",
+        "confidence": 0.8
+      },
+      "str": {
+        "ops": [
+          "stream",
+          "instantiate",
+          "rotate"
+        ],
+        "gloss": "flow→pin→stabilize",
+        "confidence": 0.85
+      },
+      "spr": {
+        "ops": [
+          "stream",
+          "present",
+          "rotate"
+        ],
+        "gloss": "flow→emerge→distribute",
+        "confidence": 0.8
+      },
+      "sk": {
+        "ops": [
+          "stream",
+          "clamp"
+        ],
+        "gloss": "scan→select",
+        "confidence": 0.95
+      },
+      "sc": {
+        "ops": [
+          "stream",
+          "clamp"
+        ],
+        "gloss": "scan→select (variant)",
+        "confidence": 0.9
+      },
+      "gr": {
+        "ops": [
+          "grasp",
+          "rotate"
+        ],
+        "gloss": "grab→turn",
+        "confidence": 0.85
+      },
+      "br": {
+        "ops": [
+          "bind",
+          "rotate"
+        ],
+        "gloss": "bind→revolve",
+        "confidence": 0.8
+      },
+      "cr": {
+        "ops": [
+          "contain",
+          "rotate"
+        ],
+        "gloss": "encircle",
+        "confidence": 0.8
+      },
+      "dr": {
+        "ops": [
+          "decide",
+          "rotate"
+        ],
+        "gloss": "determine→direction",
+        "confidence": 0.75
+      },
+      "fr": {
+        "ops": [
+          "flow",
+          "rotate"
+        ],
+        "gloss": "fluid→rotation",
+        "confidence": 0.8
+      },
+      "pr": {
+        "ops": [
+          "present",
+          "rotate"
+        ],
+        "gloss": "present→rotation",
+        "confidence": 0.75
+      },
+      "ld": {
+        "ops": [
+          "align",
+          "decide"
+        ],
+        "gloss": "align→decide (modal)",
+        "confidence": 0.7
+      },
+      "ght": {
+        "ops": [
+          "grasp",
+          "animate",
+          "instantiate"
+        ],
+        "gloss": "grasp→breathe→pin",
+        "confidence": 0.65
+      },
+      "th": {
+        "ops": [
+          "instantiate",
+          "animate"
+        ],
+        "gloss": "pin→breathe (abstract)",
+        "confidence": 0.85
+      },
+      "wh": {
+        "ops": [
+          "web",
+          "animate"
+        ],
+        "gloss": "web→breathe (query)",
+        "confidence": 0.75
+      },
+      "ch": {
+        "ops": [
+          "contain",
+          "animate"
+        ],
+        "gloss": "contain→breathe (check)",
+        "confidence": 0.7
+      },
+      "sh": {
+        "ops": [
+          "stream",
+          "animate"
+        ],
+        "gloss": "stream→breathe (smooth)",
+        "confidence": 0.75
+      }
+    },
+    "complete_operator_map": {
+      "b": {
+        "op": "bind",
+        "principle": "boundary/bulge left",
+        "confidence": 0.85
+      },
+      "d": {
+        "op": "decide",
+        "principle": "delineate/door right",
+        "confidence": 0.85
+      },
+      "g": {
+        "op": "grasp",
+        "principle": "gate/gather return",
+        "confidence": 0.85
+      },
+      "k": {
+        "op": "clamp",
+        "principle": "cut/classify branch",
+        "confidence": 0.95
+      },
+      "m": {
+        "op": "multiply",
+        "principle": "matrix/mass accumulate",
+        "confidence": 0.95
+      },
+      "s": {
+        "op": "stream",
+        "principle": "scan/scatter flow",
+        "confidence": 0.95
+      },
+      "t": {
+        "op": "instantiate",
+        "principle": "terminal/tool pin",
+        "confidence": 0.95
+      },
+      "c": {
+        "op": "contain",
+        "principle": "curve/gather approach",
+        "confidence": 0.9
+      },
+      "f": {
+        "op": "flow",
+        "principle": "fork/friction split",
+        "confidence": 0.9
+      },
+      "h": {
+        "op": "animate",
+        "principle": "breath/aspiration",
+        "confidence": 0.8
+      },
+      "j": {
+        "op": "project",
+        "principle": "jet/joint trajectory",
+        "confidence": 0.75
+      },
+      "l": {
+        "op": "align",
+        "principle": "line/level lateral",
+        "confidence": 0.9
+      },
+      "n": {
+        "op": "in",
+        "principle": "next/not alternative",
+        "confidence": 0.85
+      },
+      "p": {
+        "op": "present",
+        "principle": "press/project emerge",
+        "confidence": 0.8
+      },
+      "q": {
+        "op": "query",
+        "principle": "query outlet from whole",
+        "confidence": 0.85
+      },
+      "r": {
+        "op": "rotate",
+        "principle": "route/recur vibration",
+        "confidence": 0.9
+      },
+      "v": {
+        "op": "vector",
+        "principle": "vector/channel directed",
+        "confidence": 0.85
+      },
+      "w": {
+        "op": "web",
+        "principle": "wave/web dual channels",
+        "confidence": 0.9
+      },
+      "x": {
+        "op": "cross",
+        "principle": "nexus intersection",
+        "confidence": 0.85
+      },
+      "y": {
+        "op": "branch",
+        "principle": "bifurcated split/choice",
+        "confidence": 0.8
+      },
+      "z": {
+        "op": "quantize",
+        "principle": "zip/signal discretize",
+        "confidence": 0.75
+      }
+    },
+    "typed_payload_map": {
+      "a": {
+        "type": "base_type",
+        "tag": "base",
+        "principle": "aperture/origin",
+        "confidence": 0.95
+      },
+      "e": {
+        "type": "relation",
+        "tag": "relational",
+        "principle": "reflexive-relational",
+        "confidence": 0.9
+      },
+      "i": {
+        "type": "index",
+        "tag": "index",
+        "principle": "minimal unit",
+        "confidence": 0.95
+      },
+      "o": {
+        "type": "container",
+        "tag": "object",
+        "principle": "wholeness",
+        "confidence": 0.9
+      },
+      "u": {
+        "type": "struct",
+        "tag": "capacity",
+        "principle": "root/union",
+        "confidence": 0.85
+      },
+      "y": {
+        "type": "branch",
+        "tag": "branch",
+        "principle": "bifurcated",
+        "confidence": 0.8
+      }
+    },
+    "named_payloads": {
+      "deictic_index": {
+        "type": "deictic_index",
+        "tag": "index",
+        "principle": "pointing/proximal-distal reference",
+        "features": {
+          "proximity": "proximal|distal",
+          "number": "singular|plural",
+          "scope": "utterance/context"
+        },
+        "confidence": 0.95
+      }
+    },
+    "fields": {
+      "b": {
+        "tags": {
+          "boundary": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "bulge": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "birth": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "bind": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "base": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "block": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {
+          "initial": {
+            "birth": 0.7,
+            "begin": 0.6
+          },
+          "medial": {
+            "bind": 0.7,
+            "bulge": 0.5
+          },
+          "final": {
+            "boundary": 0.7,
+            "block": 0.6
+          }
+        },
+        "cluster_behaviors": {}
+      },
+      "c": {
+        "tags": {
+          "curve": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "cut": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "collect": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "cycle": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "call": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "contain": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {
+          "ch": "channel",
+          "ck": "clamp"
+        }
+      },
+      "d": {
+        "tags": {
+          "define": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "divide": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "direct": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "dense": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "door": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "decide": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {
+          "initial": {
+            "define": 0.6,
+            "direct": 0.6
+          },
+          "final": {
+            "boundary": 0.5,
+            "end": 0.5
+          }
+        },
+        "cluster_behaviors": {}
+      },
+      "f": {
+        "tags": {
+          "flow": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "fork": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "form": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "force": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "filter": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {
+          "fl": "flow",
+          "fr": "fragment"
+        }
+      },
+      "g": {
+        "tags": {
+          "gather": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "generate": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "ground": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "guide": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "gyrate": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {
+          "gr": "ground",
+          "gh": "ethereal"
+        }
+      },
+      "h": {
+        "tags": {
+          "breathe": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "bridge": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "height": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "hide": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "hold": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "hover": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "j": {
+        "tags": {
+          "junction": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "journey": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "jut": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "judge": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "jump": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "join": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "k": {
+        "tags": {
+          "cut": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": [
+              "ask",
+              "ask"
+            ]
+          },
+          "key": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "clamp": {
+            "confidence": 0.7566666666666667,
+            "evidence_count": 4,
+            "contexts": [
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask"
+            ]
+          },
+          "kindle": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "know": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "classify": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {
+          "sk": "scan-cut",
+          "ck": "terminal-cut"
+        }
+      },
+      "l": {
+        "tags": {
+          "line": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "link": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "lift": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "liquid": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "locus": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "extend": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "m": {
+        "tags": {
+          "matrix": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "multiply": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "mold": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "measure": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "merge": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "memory": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "mother": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "n": {
+        "tags": {
+          "in": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "negate": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "navigate": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "new": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "name": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "narrow": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "null": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "p": {
+        "tags": {
+          "present": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "pulse": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "potential": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "point": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "pierce": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "parent": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {
+          "pr": "present-recursive",
+          "pl": "fold"
+        }
+      },
+      "q": {
+        "tags": {
+          "query": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "quest": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "quantum": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "queue": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "quell": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "quality": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "r": {
+        "tags": {
+          "orient": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "resonate": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "return": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "route": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "rough": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "radiate": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "recursive": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "s": {
+        "tags": {
+          "stream": {
+            "confidence": 1.0,
+            "evidence_count": 22,
+            "contexts": [
+              "stream",
+              "strike",
+              "slow",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask"
+            ]
+          },
+          "scatter": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "sense": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "separate": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "spiral": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "soft": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "scan": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {
+          "st": "establish",
+          "str": "structure",
+          "sh": "diffuse"
+        }
+      },
+      "t": {
+        "tags": {
+          "transform": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "transcend": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "terminal": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "tool": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "test": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "tree": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {
+          "th": "ethereal-transform",
+          "tr": "transmit"
+        }
+      },
+      "v": {
+        "tags": {
+          "vector": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "valley": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "vibrate": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "value": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "view": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "venture": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "w": {
+        "tags": {
+          "wave": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "web": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "wander": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "weave": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "wonder": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "witness": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "x": {
+        "tags": {
+          "cross": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "exchange": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "execute": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "exact": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "exit": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "examine": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "y": {
+        "tags": {
+          "yield": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "fork": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "why": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "yoke": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "year": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "branch": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      },
+      "z": {
+        "tags": {
+          "zigzag": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "zero": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "zone": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "zenith": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "zephyr": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          "zip": {
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        },
+        "position_preferences": {},
+        "cluster_behaviors": {}
+      }
+    },
+    "tag_associations": {
+      "boundary": {
+        "b": 0.5
+      },
+      "bulge": {
+        "b": 0.5
+      },
+      "birth": {
+        "b": 0.5
+      },
+      "bind": {
+        "b": 0.5
+      },
+      "base": {
+        "b": 0.5
+      },
+      "block": {
+        "b": 0.5
+      },
+      "curve": {
+        "c": 0.5
+      },
+      "cut": {
+        "c": 0.5,
+        "k": 0.5
+      },
+      "collect": {
+        "c": 0.5
+      },
+      "cycle": {
+        "c": 0.5
+      },
+      "call": {
+        "c": 0.5
+      },
+      "contain": {
+        "c": 0.5
+      },
+      "define": {
+        "d": 0.5
+      },
+      "divide": {
+        "d": 0.5
+      },
+      "direct": {
+        "d": 0.5
+      },
+      "dense": {
+        "d": 0.5
+      },
+      "door": {
+        "d": 0.5
+      },
+      "decide": {
+        "d": 0.5
+      },
+      "flow": {
+        "f": 0.5
+      },
+      "fork": {
+        "f": 0.5,
+        "y": 0.5
+      },
+      "form": {
+        "f": 0.5
+      },
+      "force": {
+        "f": 0.5
+      },
+      "filter": {
+        "f": 0.5
+      },
+      "gather": {
+        "g": 0.5
+      },
+      "generate": {
+        "g": 0.5
+      },
+      "ground": {
+        "g": 0.5
+      },
+      "guide": {
+        "g": 0.5
+      },
+      "gyrate": {
+        "g": 0.5
+      },
+      "breathe": {
+        "h": 0.5
+      },
+      "bridge": {
+        "h": 0.5
+      },
+      "height": {
+        "h": 0.5
+      },
+      "hide": {
+        "h": 0.5
+      },
+      "hold": {
+        "h": 0.5
+      },
+      "hover": {
+        "h": 0.5
+      },
+      "junction": {
+        "j": 0.5
+      },
+      "journey": {
+        "j": 0.5
+      },
+      "jut": {
+        "j": 0.5
+      },
+      "judge": {
+        "j": 0.5
+      },
+      "jump": {
+        "j": 0.5
+      },
+      "join": {
+        "j": 0.5
+      },
+      "key": {
+        "k": 0.5
+      },
+      "clamp": {
+        "k": 0.7566666666666667
+      },
+      "kindle": {
+        "k": 0.5
+      },
+      "know": {
+        "k": 0.5
+      },
+      "classify": {
+        "k": 0.5
+      },
+      "line": {
+        "l": 0.5
+      },
+      "link": {
+        "l": 0.5
+      },
+      "lift": {
+        "l": 0.5
+      },
+      "liquid": {
+        "l": 0.5
+      },
+      "locus": {
+        "l": 0.5
+      },
+      "extend": {
+        "l": 0.5
+      },
+      "matrix": {
+        "m": 0.5
+      },
+      "multiply": {
+        "m": 0.5
+      },
+      "mold": {
+        "m": 0.5
+      },
+      "measure": {
+        "m": 0.5
+      },
+      "merge": {
+        "m": 0.5
+      },
+      "memory": {
+        "m": 0.5
+      },
+      "mother": {
+        "m": 0.5
+      },
+      "negate": {
+        "n": 0.5
+      },
+      "navigate": {
+        "n": 0.5
+      },
+      "new": {
+        "n": 0.5
+      },
+      "name": {
+        "n": 0.5
+      },
+      "narrow": {
+        "n": 0.5
+      },
+      "null": {
+        "n": 0.5
+      },
+      "present": {
+        "p": 0.5
+      },
+      "pulse": {
+        "p": 0.5
+      },
+      "potential": {
+        "p": 0.5
+      },
+      "point": {
+        "p": 0.5
+      },
+      "pierce": {
+        "p": 0.5
+      },
+      "parent": {
+        "p": 0.5
+      },
+      "query": {
+        "q": 0.5
+      },
+      "quest": {
+        "q": 0.5
+      },
+      "quantum": {
+        "q": 0.5
+      },
+      "queue": {
+        "q": 0.5
+      },
+      "quell": {
+        "q": 0.5
+      },
+      "quality": {
+        "q": 0.5
+      },
+      "rotate": {
+        "r": 0.5
+      },
+      "resonate": {
+        "r": 0.5
+      },
+      "return": {
+        "r": 0.5
+      },
+      "route": {
+        "r": 0.5
+      },
+      "rough": {
+        "r": 0.5
+      },
+      "radiate": {
+        "r": 0.5
+      },
+      "recursive": {
+        "r": 0.5
+      },
+      "stream": {
+        "s": 1.0
+      },
+      "scatter": {
+        "s": 0.5
+      },
+      "sense": {
+        "s": 0.5
+      },
+      "separate": {
+        "s": 0.5
+      },
+      "spiral": {
+        "s": 0.5
+      },
+      "soft": {
+        "s": 0.5
+      },
+      "scan": {
+        "s": 0.5
+      },
+      "transform": {
+        "t": 0.5
+      },
+      "transcend": {
+        "t": 0.5
+      },
+      "terminal": {
+        "t": 0.5
+      },
+      "tool": {
+        "t": 0.5
+      },
+      "test": {
+        "t": 0.5
+      },
+      "tree": {
+        "t": 0.5
+      },
+      "vector": {
+        "v": 0.5
+      },
+      "valley": {
+        "v": 0.5
+      },
+      "vibrate": {
+        "v": 0.5
+      },
+      "value": {
+        "v": 0.5
+      },
+      "view": {
+        "v": 0.5
+      },
+      "venture": {
+        "v": 0.5
+      },
+      "wave": {
+        "w": 0.5
+      },
+      "web": {
+        "w": 0.5
+      },
+      "wander": {
+        "w": 0.5
+      },
+      "weave": {
+        "w": 0.5
+      },
+      "wonder": {
+        "w": 0.5
+      },
+      "witness": {
+        "w": 0.5
+      },
+      "cross": {
+        "x": 0.5
+      },
+      "exchange": {
+        "x": 0.5
+      },
+      "execute": {
+        "x": 0.5
+      },
+      "exact": {
+        "x": 0.5
+      },
+      "exit": {
+        "x": 0.5
+      },
+      "examine": {
+        "x": 0.5
+      },
+      "yield": {
+        "y": 0.5
+      },
+      "why": {
+        "y": 0.5
+      },
+      "yoke": {
+        "y": 0.5
+      },
+      "year": {
+        "y": 0.5
+      },
+      "branch": {
+        "y": 0.5
+      },
+      "zigzag": {
+        "z": 0.5
+      },
+      "zero": {
+        "z": 0.5
+      },
+      "zone": {
+        "z": 0.5
+      },
+      "zenith": {
+        "z": 0.5
+      },
+      "zephyr": {
+        "z": 0.5
+      },
+      "zip": {
+        "z": 0.5
+      }
+    }
+  },
+  "normalized": {
+    "vowels": [
+      "a",
+      "e",
+      "i",
+      "o",
+      "u",
+      "y"
+    ],
+    "payload_entries": [
+      {
+        "vowel": "a",
+        "type": "base_type",
+        "tag": "base",
+        "principle": "aperture/origin"
+      },
+      {
+        "vowel": "e",
+        "type": "encompass",
+        "tag": "relate",
+        "principle": "reflexive-relational"
+      },
+      {
+        "vowel": "i",
+        "type": "identify",
+        "tag": "index",
+        "principle": "minimal unit/index"
+      },
+      {
+        "vowel": "o",
+        "type": "whole",
+        "tag": "object",
+        "principle": "wholeness/container"
+      },
+      {
+        "vowel": "u",
+        "type": "union",
+        "tag": "capacity",
+        "principle": "root/union/channel"
+      },
+      {
+        "vowel": "y",
+        "type": "branch",
+        "tag": "branch",
+        "principle": "bifurcated value"
+      }
+    ],
+    "operator_entries": [
+      {
+        "glyph": "b",
+        "value": "bind"
+      },
+      {
+        "glyph": "c",
+        "value": "contain"
+      },
+      {
+        "glyph": "d",
+        "value": "decide"
+      },
+      {
+        "glyph": "f",
+        "value": "flow"
+      },
+      {
+        "glyph": "g",
+        "value": "grasp"
+      },
+      {
+        "glyph": "h",
+        "value": "animate"
+      },
+      {
+        "glyph": "j",
+        "value": "project"
+      },
+      {
+        "glyph": "k",
+        "value": "clamp"
+      },
+      {
+        "glyph": "l",
+        "value": "align"
+      },
+      {
+        "glyph": "m",
+        "value": "multiply"
+      },
+      {
+        "glyph": "n",
+        "value": "n"
+      },
+      {
+        "glyph": "p",
+        "value": "present"
+      },
+      {
+        "glyph": "q",
+        "value": "query"
+      },
+      {
+        "glyph": "r",
+        "value": "rotate"
+      },
+      {
+        "glyph": "s",
+        "value": "stream"
+      },
+      {
+        "glyph": "t",
+        "value": "instantiate"
+      },
+      {
+        "glyph": "v",
+        "value": "vector"
+      },
+      {
+        "glyph": "w",
+        "value": "web"
+      },
+      {
+        "glyph": "x",
+        "value": "cross"
+      },
+      {
+        "glyph": "z",
+        "value": "quantize"
+      }
+    ],
+    "complete_operator_entries": [
+      {
+        "glyph": "b",
+        "op": "bind",
+        "principle": "boundary/bulge left",
+        "confidence": 0.85
+      },
+      {
+        "glyph": "d",
+        "op": "decide",
+        "principle": "delineate/door right",
+        "confidence": 0.85
+      },
+      {
+        "glyph": "g",
+        "op": "grasp",
+        "principle": "gate/gather return",
+        "confidence": 0.85
+      },
+      {
+        "glyph": "k",
+        "op": "clamp",
+        "principle": "cut/classify branch",
+        "confidence": 0.95
+      },
+      {
+        "glyph": "m",
+        "op": "multiply",
+        "principle": "matrix/mass accumulate",
+        "confidence": 0.95
+      },
+      {
+        "glyph": "s",
+        "op": "stream",
+        "principle": "scan/scatter flow",
+        "confidence": 0.95
+      },
+      {
+        "glyph": "t",
+        "op": "instantiate",
+        "principle": "terminal/tool pin",
+        "confidence": 0.95
+      },
+      {
+        "glyph": "c",
+        "op": "contain",
+        "principle": "curve/gather approach",
+        "confidence": 0.9
+      },
+      {
+        "glyph": "f",
+        "op": "flow",
+        "principle": "fork/friction split",
+        "confidence": 0.9
+      },
+      {
+        "glyph": "h",
+        "op": "animate",
+        "principle": "breath/aspiration",
+        "confidence": 0.8
+      },
+      {
+        "glyph": "j",
+        "op": "project",
+        "principle": "jet/joint trajectory",
+        "confidence": 0.75
+      },
+      {
+        "glyph": "l",
+        "op": "align",
+        "principle": "line/level lateral",
+        "confidence": 0.9
+      },
+      {
+        "glyph": "n",
+        "op": "negate",
+        "principle": "next/not alternative",
+        "confidence": 0.85
+      },
+      {
+        "glyph": "p",
+        "op": "present",
+        "principle": "press/project emerge",
+        "confidence": 0.8
+      },
+      {
+        "glyph": "q",
+        "op": "query",
+        "principle": "query outlet from whole",
+        "confidence": 0.85
+      },
+      {
+        "glyph": "r",
+        "op": "rotate",
+        "principle": "route/recur vibration",
+        "confidence": 0.9
+      },
+      {
+        "glyph": "v",
+        "op": "vector",
+        "principle": "vector/channel directed",
+        "confidence": 0.85
+      },
+      {
+        "glyph": "w",
+        "op": "web",
+        "principle": "wave/web dual channels",
+        "confidence": 0.9
+      },
+      {
+        "glyph": "x",
+        "op": "cross",
+        "principle": "nexus intersection",
+        "confidence": 0.85
+      },
+      {
+        "glyph": "y",
+        "op": "branch",
+        "principle": "bifurcated split/choice",
+        "confidence": 0.8
+      },
+      {
+        "glyph": "z",
+        "op": "quantize",
+        "principle": "zip/signal discretize",
+        "confidence": 0.75
+      }
+    ],
+    "typed_payload_entries": [
+      {
+        "vowel": "a",
+        "type": "base_type",
+        "tag": "base",
+        "principle": "aperture/origin",
+        "confidence": 0.95
+      },
+      {
+        "vowel": "e",
+        "type": "relation",
+        "tag": "relational",
+        "principle": "reflexive-relational",
+        "confidence": 0.9
+      },
+      {
+        "vowel": "i",
+        "type": "index",
+        "tag": "index",
+        "principle": "minimal unit",
+        "confidence": 0.95
+      },
+      {
+        "vowel": "o",
+        "type": "container",
+        "tag": "object",
+        "principle": "wholeness",
+        "confidence": 0.9
+      },
+      {
+        "vowel": "u",
+        "type": "struct",
+        "tag": "capacity",
+        "principle": "root/union",
+        "confidence": 0.85
+      },
+      {
+        "vowel": "y",
+        "type": "branch",
+        "tag": "branch",
+        "principle": "bifurcated",
+        "confidence": 0.8
+      }
+    ],
+    "cluster_entries": [
+      {
+        "cluster": "st",
+        "value": [
+          "stream",
+          "instantiate"
+        ]
+      },
+      {
+        "cluster": "tr",
+        "value": [
+          "instantiate",
+          "rotate"
+        ]
+      },
+      {
+        "cluster": "pl",
+        "value": [
+          "present",
+          "align"
+        ]
+      },
+      {
+        "cluster": "str",
+        "value": [
+          "stream",
+          "instantiate",
+          "rotate"
+        ]
+      },
+      {
+        "cluster": "spr",
+        "value": [
+          "stream",
+          "present",
+          "rotate"
+        ]
+      },
+      {
+        "cluster": "sk",
+        "value": [
+          "stream",
+          "clamp"
+        ]
+      },
+      {
+        "cluster": "sc",
+        "value": [
+          "stream",
+          "clamp"
+        ]
+      }
+    ],
+    "enhanced_cluster_entries": [
+      {
+        "cluster": "st",
+        "ops": [
+          "stream",
+          "instantiate"
+        ],
+        "gloss": "flow→point",
+        "confidence": 0.9
+      },
+      {
+        "cluster": "tr",
+        "ops": [
+          "instantiate",
+          "rotate"
+        ],
+        "gloss": "structure→rotate",
+        "confidence": 0.85
+      },
+      {
+        "cluster": "pl",
+        "ops": [
+          "present",
+          "align"
+        ],
+        "gloss": "present→align",
+        "confidence": 0.8
+      },
+      {
+        "cluster": "str",
+        "ops": [
+          "stream",
+          "instantiate",
+          "rotate"
+        ],
+        "gloss": "flow→pin→stabilize",
+        "confidence": 0.85
+      },
+      {
+        "cluster": "spr",
+        "ops": [
+          "stream",
+          "present",
+          "rotate"
+        ],
+        "gloss": "flow→emerge→distribute",
+        "confidence": 0.8
+      },
+      {
+        "cluster": "sk",
+        "ops": [
+          "stream",
+          "clamp"
+        ],
+        "gloss": "scan→select",
+        "confidence": 0.95
+      },
+      {
+        "cluster": "sc",
+        "ops": [
+          "stream",
+          "clamp"
+        ],
+        "gloss": "scan→select (variant)",
+        "confidence": 0.9
+      },
+      {
+        "cluster": "gr",
+        "ops": [
+          "grasp",
+          "rotate"
+        ],
+        "gloss": "grab→turn",
+        "confidence": 0.85
+      },
+      {
+        "cluster": "br",
+        "ops": [
+          "bind",
+          "rotate"
+        ],
+        "gloss": "bind→revolve",
+        "confidence": 0.8
+      },
+      {
+        "cluster": "cr",
+        "ops": [
+          "contain",
+          "rotate"
+        ],
+        "gloss": "encircle",
+        "confidence": 0.8
+      },
+      {
+        "cluster": "dr",
+        "ops": [
+          "decide",
+          "rotate"
+        ],
+        "gloss": "determine→direction",
+        "confidence": 0.75
+      },
+      {
+        "cluster": "fr",
+        "ops": [
+          "flow",
+          "rotate"
+        ],
+        "gloss": "fluid→rotation",
+        "confidence": 0.8
+      },
+      {
+        "cluster": "pr",
+        "ops": [
+          "present",
+          "rotate"
+        ],
+        "gloss": "present→rotation",
+        "confidence": 0.75
+      },
+      {
+        "cluster": "ld",
+        "ops": [
+          "align",
+          "decide"
+        ],
+        "gloss": "align→decide (modal)",
+        "confidence": 0.7
+      },
+      {
+        "cluster": "ght",
+        "ops": [
+          "grasp",
+          "animate",
+          "instantiate"
+        ],
+        "gloss": "grasp→breathe→pin",
+        "confidence": 0.65
+      },
+      {
+        "cluster": "th",
+        "ops": [
+          "instantiate",
+          "animate"
+        ],
+        "gloss": "pin→breathe (abstract)",
+        "confidence": 0.85
+      },
+      {
+        "cluster": "wh",
+        "ops": [
+          "web",
+          "animate"
+        ],
+        "gloss": "web→breathe (query)",
+        "confidence": 0.75
+      },
+      {
+        "cluster": "ch",
+        "ops": [
+          "contain",
+          "animate"
+        ],
+        "gloss": "contain→breathe (check)",
+        "confidence": 0.7
+      },
+      {
+        "cluster": "sh",
+        "ops": [
+          "stream",
+          "animate"
+        ],
+        "gloss": "stream→breathe (smooth)",
+        "confidence": 0.75
+      }
+    ],
+    "field_entries": [
+      {
+        "glyph": "b",
+        "tags": [
+          {
+            "tag": "boundary",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "bulge",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "birth",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "bind",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "base",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "block",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [
+          {
+            "position": "initial",
+            "name": "birth",
+            "score": 0.7
+          },
+          {
+            "position": "initial",
+            "name": "begin",
+            "score": 0.6
+          },
+          {
+            "position": "medial",
+            "name": "bind",
+            "score": 0.7
+          },
+          {
+            "position": "medial",
+            "name": "bulge",
+            "score": 0.5
+          },
+          {
+            "position": "final",
+            "name": "boundary",
+            "score": 0.7
+          },
+          {
+            "position": "final",
+            "name": "block",
+            "score": 0.6
+          }
+        ],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "c",
+        "tags": [
+          {
+            "tag": "curve",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "cut",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "collect",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "cycle",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "call",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "contain",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": [
+          {
+            "cluster": "ch",
+            "value": "channel"
+          },
+          {
+            "cluster": "ck",
+            "value": "clamp"
+          }
+        ]
+      },
+      {
+        "glyph": "d",
+        "tags": [
+          {
+            "tag": "define",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "divide",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "direct",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "dense",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "door",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "decide",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [
+          {
+            "position": "initial",
+            "name": "define",
+            "score": 0.6
+          },
+          {
+            "position": "initial",
+            "name": "direct",
+            "score": 0.6
+          },
+          {
+            "position": "final",
+            "name": "boundary",
+            "score": 0.5
+          },
+          {
+            "position": "final",
+            "name": "end",
+            "score": 0.5
+          }
+        ],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "f",
+        "tags": [
+          {
+            "tag": "flow",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "fork",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "form",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "force",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "filter",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": [
+          {
+            "cluster": "fl",
+            "value": "flow"
+          },
+          {
+            "cluster": "fr",
+            "value": "fragment"
+          }
+        ]
+      },
+      {
+        "glyph": "g",
+        "tags": [
+          {
+            "tag": "gather",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "generate",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "ground",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "guide",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "gyrate",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": [
+          {
+            "cluster": "gr",
+            "value": "ground"
+          },
+          {
+            "cluster": "gh",
+            "value": "ethereal"
+          }
+        ]
+      },
+      {
+        "glyph": "h",
+        "tags": [
+          {
+            "tag": "breathe",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "bridge",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "height",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "hide",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "hold",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "hover",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "j",
+        "tags": [
+          {
+            "tag": "junction",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "journey",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "jut",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "judge",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "jump",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "join",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "k",
+        "tags": [
+          {
+            "tag": "cut",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": [
+              "ask",
+              "ask"
+            ]
+          },
+          {
+            "tag": "key",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "clamp",
+            "confidence": 0.7566666666666667,
+            "evidence_count": 4,
+            "contexts": [
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask"
+            ]
+          },
+          {
+            "tag": "kindle",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "know",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "classify",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": [
+          {
+            "cluster": "sk",
+            "value": "scan-cut"
+          },
+          {
+            "cluster": "ck",
+            "value": "terminal-cut"
+          }
+        ]
+      },
+      {
+        "glyph": "l",
+        "tags": [
+          {
+            "tag": "line",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "link",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "lift",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "liquid",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "locus",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "extend",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "m",
+        "tags": [
+          {
+            "tag": "matrix",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "multiply",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "mold",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "measure",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "merge",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "memory",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "mother",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "n",
+        "tags": [
+          {
+            "tag": "negate",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "navigate",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "new",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "name",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "narrow",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "null",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "p",
+        "tags": [
+          {
+            "tag": "present",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "pulse",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "potential",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "point",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "pierce",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "parent",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": [
+          {
+            "cluster": "pr",
+            "value": "present-recursive"
+          },
+          {
+            "cluster": "pl",
+            "value": "fold"
+          }
+        ]
+      },
+      {
+        "glyph": "q",
+        "tags": [
+          {
+            "tag": "query",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "quest",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "quantum",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "queue",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "quell",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "quality",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "r",
+        "tags": [
+          {
+            "tag": "orient",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "resonate",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "return",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "route",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "rough",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "radiate",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "recursive",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "s",
+        "tags": [
+          {
+            "tag": "stream",
+            "confidence": 1.0,
+            "evidence_count": 22,
+            "contexts": [
+              "stream",
+              "strike",
+              "slow",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask",
+              "ask"
+            ]
+          },
+          {
+            "tag": "scatter",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "sense",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "separate",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "spiral",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "soft",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "scan",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": [
+          {
+            "cluster": "st",
+            "value": "establish"
+          },
+          {
+            "cluster": "str",
+            "value": "structure"
+          },
+          {
+            "cluster": "sh",
+            "value": "diffuse"
+          }
+        ]
+      },
+      {
+        "glyph": "t",
+        "tags": [
+          {
+            "tag": "transform",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "transcend",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "terminal",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "tool",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "test",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "tree",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": [
+          {
+            "cluster": "th",
+            "value": "ethereal-transform"
+          },
+          {
+            "cluster": "tr",
+            "value": "transmit"
+          }
+        ]
+      },
+      {
+        "glyph": "v",
+        "tags": [
+          {
+            "tag": "vector",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "valley",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "vibrate",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "value",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "view",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "venture",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "w",
+        "tags": [
+          {
+            "tag": "wave",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "web",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "wander",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "weave",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "wonder",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "witness",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "x",
+        "tags": [
+          {
+            "tag": "cross",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "exchange",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "execute",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "exact",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "exit",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "examine",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "y",
+        "tags": [
+          {
+            "tag": "yield",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "fork",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "why",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "yoke",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "year",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "branch",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      },
+      {
+        "glyph": "z",
+        "tags": [
+          {
+            "tag": "zigzag",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "zero",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "zone",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "zenith",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "zephyr",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          },
+          {
+            "tag": "zip",
+            "confidence": 0.5,
+            "evidence_count": 0,
+            "contexts": []
+          }
+        ],
+        "position_preferences": [],
+        "cluster_behaviors": []
+      }
+    ],
+    "tag_association_entries": [
+      {
+        "tag": "boundary",
+        "b": 0.5
+      },
+      {
+        "tag": "bulge",
+        "b": 0.5
+      },
+      {
+        "tag": "birth",
+        "b": 0.5
+      },
+      {
+        "tag": "bind",
+        "b": 0.5
+      },
+      {
+        "tag": "base",
+        "b": 0.5
+      },
+      {
+        "tag": "block",
+        "b": 0.5
+      },
+      {
+        "tag": "curve",
+        "c": 0.5
+      },
+      {
+        "tag": "cut",
+        "c": 0.5,
+        "k": 0.5
+      },
+      {
+        "tag": "collect",
+        "c": 0.5
+      },
+      {
+        "tag": "cycle",
+        "c": 0.5
+      },
+      {
+        "tag": "call",
+        "c": 0.5
+      },
+      {
+        "tag": "contain",
+        "c": 0.5
+      },
+      {
+        "tag": "define",
+        "d": 0.5
+      },
+      {
+        "tag": "divide",
+        "d": 0.5
+      },
+      {
+        "tag": "direct",
+        "d": 0.5
+      },
+      {
+        "tag": "dense",
+        "d": 0.5
+      },
+      {
+        "tag": "door",
+        "d": 0.5
+      },
+      {
+        "tag": "decide",
+        "d": 0.5
+      },
+      {
+        "tag": "flow",
+        "f": 0.5
+      },
+      {
+        "tag": "fork",
+        "f": 0.5,
+        "y": 0.5
+      },
+      {
+        "tag": "form",
+        "f": 0.5
+      },
+      {
+        "tag": "force",
+        "f": 0.5
+      },
+      {
+        "tag": "filter",
+        "f": 0.5
+      },
+      {
+        "tag": "gather",
+        "g": 0.5
+      },
+      {
+        "tag": "generate",
+        "g": 0.5
+      },
+      {
+        "tag": "ground",
+        "g": 0.5
+      },
+      {
+        "tag": "guide",
+        "g": 0.5
+      },
+      {
+        "tag": "gyrate",
+        "g": 0.5
+      },
+      {
+        "tag": "breathe",
+        "h": 0.5
+      },
+      {
+        "tag": "bridge",
+        "h": 0.5
+      },
+      {
+        "tag": "height",
+        "h": 0.5
+      },
+      {
+        "tag": "hide",
+        "h": 0.5
+      },
+      {
+        "tag": "hold",
+        "h": 0.5
+      },
+      {
+        "tag": "hover",
+        "h": 0.5
+      },
+      {
+        "tag": "junction",
+        "j": 0.5
+      },
+      {
+        "tag": "journey",
+        "j": 0.5
+      },
+      {
+        "tag": "jut",
+        "j": 0.5
+      },
+      {
+        "tag": "judge",
+        "j": 0.5
+      },
+      {
+        "tag": "jump",
+        "j": 0.5
+      },
+      {
+        "tag": "join",
+        "j": 0.5
+      },
+      {
+        "tag": "key",
+        "k": 0.5
+      },
+      {
+        "tag": "clamp",
+        "k": 0.7566666666666667
+      },
+      {
+        "tag": "kindle",
+        "k": 0.5
+      },
+      {
+        "tag": "know",
+        "k": 0.5
+      },
+      {
+        "tag": "classify",
+        "k": 0.5
+      },
+      {
+        "tag": "line",
+        "l": 0.5
+      },
+      {
+        "tag": "link",
+        "l": 0.5
+      },
+      {
+        "tag": "lift",
+        "l": 0.5
+      },
+      {
+        "tag": "liquid",
+        "l": 0.5
+      },
+      {
+        "tag": "locus",
+        "l": 0.5
+      },
+      {
+        "tag": "extend",
+        "l": 0.5
+      },
+      {
+        "tag": "matrix",
+        "m": 0.5
+      },
+      {
+        "tag": "multiply",
+        "m": 0.5
+      },
+      {
+        "tag": "mold",
+        "m": 0.5
+      },
+      {
+        "tag": "measure",
+        "m": 0.5
+      },
+      {
+        "tag": "merge",
+        "m": 0.5
+      },
+      {
+        "tag": "memory",
+        "m": 0.5
+      },
+      {
+        "tag": "mother",
+        "m": 0.5
+      },
+      {
+        "tag": "negate",
+        "n": 0.5
+      },
+      {
+        "tag": "navigate",
+        "n": 0.5
+      },
+      {
+        "tag": "new",
+        "n": 0.5
+      },
+      {
+        "tag": "name",
+        "n": 0.5
+      },
+      {
+        "tag": "narrow",
+        "n": 0.5
+      },
+      {
+        "tag": "null",
+        "n": 0.5
+      },
+      {
+        "tag": "present",
+        "p": 0.5
+      },
+      {
+        "tag": "pulse",
+        "p": 0.5
+      },
+      {
+        "tag": "potential",
+        "p": 0.5
+      },
+      {
+        "tag": "point",
+        "p": 0.5
+      },
+      {
+        "tag": "pierce",
+        "p": 0.5
+      },
+      {
+        "tag": "parent",
+        "p": 0.5
+      },
+      {
+        "tag": "query",
+        "q": 0.5
+      },
+      {
+        "tag": "quest",
+        "q": 0.5
+      },
+      {
+        "tag": "quantum",
+        "q": 0.5
+      },
+      {
+        "tag": "queue",
+        "q": 0.5
+      },
+      {
+        "tag": "quell",
+        "q": 0.5
+      },
+      {
+        "tag": "quality",
+        "q": 0.5
+      },
+      {
+        "tag": "rotate",
+        "r": 0.5
+      },
+      {
+        "tag": "resonate",
+        "r": 0.5
+      },
+      {
+        "tag": "return",
+        "r": 0.5
+      },
+      {
+        "tag": "route",
+        "r": 0.5
+      },
+      {
+        "tag": "rough",
+        "r": 0.5
+      },
+      {
+        "tag": "radiate",
+        "r": 0.5
+      },
+      {
+        "tag": "recursive",
+        "r": 0.5
+      },
+      {
+        "tag": "stream",
+        "s": 1.0
+      },
+      {
+        "tag": "scatter",
+        "s": 0.5
+      },
+      {
+        "tag": "sense",
+        "s": 0.5
+      },
+      {
+        "tag": "separate",
+        "s": 0.5
+      },
+      {
+        "tag": "spiral",
+        "s": 0.5
+      },
+      {
+        "tag": "soft",
+        "s": 0.5
+      },
+      {
+        "tag": "scan",
+        "s": 0.5
+      },
+      {
+        "tag": "transform",
+        "t": 0.5
+      },
+      {
+        "tag": "transcend",
+        "t": 0.5
+      },
+      {
+        "tag": "terminal",
+        "t": 0.5
+      },
+      {
+        "tag": "tool",
+        "t": 0.5
+      },
+      {
+        "tag": "test",
+        "t": 0.5
+      },
+      {
+        "tag": "tree",
+        "t": 0.5
+      },
+      {
+        "tag": "vector",
+        "v": 0.5
+      },
+      {
+        "tag": "valley",
+        "v": 0.5
+      },
+      {
+        "tag": "vibrate",
+        "v": 0.5
+      },
+      {
+        "tag": "value",
+        "v": 0.5
+      },
+      {
+        "tag": "view",
+        "v": 0.5
+      },
+      {
+        "tag": "venture",
+        "v": 0.5
+      },
+      {
+        "tag": "wave",
+        "w": 0.5
+      },
+      {
+        "tag": "web",
+        "w": 0.5
+      },
+      {
+        "tag": "wander",
+        "w": 0.5
+      },
+      {
+        "tag": "weave",
+        "w": 0.5
+      },
+      {
+        "tag": "wonder",
+        "w": 0.5
+      },
+      {
+        "tag": "witness",
+        "w": 0.5
+      },
+      {
+        "tag": "cross",
+        "x": 0.5
+      },
+      {
+        "tag": "exchange",
+        "x": 0.5
+      },
+      {
+        "tag": "execute",
+        "x": 0.5
+      },
+      {
+        "tag": "exact",
+        "x": 0.5
+      },
+      {
+        "tag": "exit",
+        "x": 0.5
+      },
+      {
+        "tag": "examine",
+        "x": 0.5
+      },
+      {
+        "tag": "yield",
+        "y": 0.5
+      },
+      {
+        "tag": "why",
+        "y": 0.5
+      },
+      {
+        "tag": "yoke",
+        "y": 0.5
+      },
+      {
+        "tag": "year",
+        "y": 0.5
+      },
+      {
+        "tag": "branch",
+        "y": 0.5
+      },
+      {
+        "tag": "zigzag",
+        "z": 0.5
+      },
+      {
+        "tag": "zero",
+        "z": 0.5
+      },
+      {
+        "tag": "zone",
+        "z": 0.5
+      },
+      {
+        "tag": "zenith",
+        "z": 0.5
+      },
+      {
+        "tag": "zephyr",
+        "z": 0.5
+      },
+      {
+        "tag": "zip",
+        "z": 0.5
+      }
+    ]
+  }
+}

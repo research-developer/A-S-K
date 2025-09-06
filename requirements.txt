@@ -8,3 +8,10 @@ python-dotenv>=1.0,<2
 # Firecrawl Python SDK for article extraction
 firecrawl-py>=4.0,<5
 beautifulsoup4>=4.12,<5
+
+# Web API (pinned to be compatible with Chainlit)
+fastapi>=0.115.3,<0.116
+uvicorn>=0.25,<0.26
+
+# Chainlit app
+chainlit>=1.2,<2

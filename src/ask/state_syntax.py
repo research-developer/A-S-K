@@ -119,36 +119,13 @@ class USKSequence:
     morphology: Optional[Dict[str, str]] = None
     
     def to_usk_syntax(self) -> str:
-        """Convert to USK syntax: [{elem1}|{elem2}-{elem3}({payload})-{elem4}]"""
+        """Convert to USK syntax in strictly linear scan order with no grouping.
+        Example: [{elem1}-{elem2}-{elem3}-...]
+        """
         if not self.elements:
             return "[]"
-        
-        # Group elements by structural relationships
-        result_parts = []
-        current_group = []
-        
-        for i, elem in enumerate(self.elements):
-            current_group.append(elem)
-            
-            # Check if this ends a structural group
-            next_elem = self.elements[i + 1] if i + 1 < len(self.elements) else None
-            
-            if (next_elem is None or 
-                elem.element_type == ElementType.FUNCTION or
-                (elem.element_type == ElementType.OPERATOR and 
-                 next_elem.element_type == ElementType.OPERATOR)):
-                
-                # End current group
-                if len(current_group) == 1:
-                    result_parts.append(current_group[0].to_usk_syntax())
-                else:
-                    # Complex group with operators and payloads
-                    group_str = self._format_group(current_group)
-                    result_parts.append(group_str)
-                
-                current_group = []
-        
-        return f"[{'-'.join(result_parts)}]"
+        parts = [e.to_usk_syntax() for e in self.elements]
+        return f"[{ '-'.join(parts) }]"
     
     def _format_group(self, group: List[USKElement]) -> str:
         """Format a group of related elements"""

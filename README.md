@@ -162,6 +162,27 @@ Additional tests: cross‑lingual operator invariants; vowel‑type priors in di
 - Reviewer playbooks and inter‑annotator agreement metrics for function words.
 - Cross‑family replication (Semitic root‑and‑pattern, Sinitic morphosyllabic, Uralic).
 
+### R&D: Positional Weighting and Corpus Tests (preregistered heuristics)
+
+We will test whether letter position modulates operator/payload influence and whether corpus‑level distributions support the USK model.
+
+- Positional weighting hypothesis:
+  - Apos (aperture): central Gaussian window (PVL/OVP) — higher processing near word center.
+  - Bpos (diagnosticity): edge boost (U‑shape) — first/last letters carry more identity.
+  - Net W(i) = normalize(Apos×Bpos); used to weight operator contributions by position.
+- Corpus hypotheses (falsifiable):
+  - T‑density higher in academic/technical vs fiction (structural instantiation).
+  - str-/tr-/ct clusters enriched in legal/engineering/science vs fiction (structure/constraint).
+  - sk/sc clusters enriched in expository/scientific sections vs narrative (scan→select).
+  - Vowel payload distributions differ by genre: i in code/docs; a in philosophy; o in ontology/object‑oriented.
+  - -ion nominalizations enriched in academic texts; -ould modals enriched in dialogue/fiction.
+  - Operator‑path entropy higher in technical prose; lexical entropy lower.
+- Implementation plan:
+  - Add `src/ask/position_weights.py` (Apos/Bpos/W(i)).
+  - Add `src/ask/metrics.py` to compute glyph/cluster/path/diphthong/nominalization features.
+  - Provide a notebook `notebooks/01_preregistered_tests.ipynb` with α=0.01, FDR correction, effect sizes, Bayes factors.
+  - CLI: `ask corpus-stats --input <dir> --out metrics.jsonl`.
+
 
 ## Contributing
 
@@ -227,6 +248,12 @@ ask decode manipulation --simple
 # JSON output for scripting
 ask decode manipulation --json
 
+# Syntax parsing (pretty)
+ask syntax patriarch
+
+# Syntax parsing (JSON)
+ask syntax heaven --json
+
 # Verbose analysis with operator principles and payload types
 ask decode manipulation --verbose
 
@@ -241,6 +268,7 @@ FIRECRAWL_API_KEY=fc-... ask extract-batch --file urls.txt > results.json
 
 # List operators or clusters with confidence
 ask operators
+ask operators --min-confidence 0.85
 ask clusters
 
 # Validate the ASK kernel proof and run self-tests
@@ -248,6 +276,199 @@ ask validate
 
 # Batch decode
 ask batch "ask,think,understand,manipulation" --json
+```
+
+### MCP Server (FastMCP)
+
+You can expose A‑S‑K over the Model Context Protocol (MCP) to integrate with MCP‑compatible clients.
+
+Prerequisites:
+
+- Install the package (editable mode recommended during development):
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -e .
+```
+
+- Install FastMCP runtime:
+
+```bash
+pip install fastmcp
+```
+
+Run the server over stdio:
+
+```bash
+ask-mcp
+```
+
+The server exposes two tools:
+
+- `decode(word: str)` → returns the enhanced decode JSON
+- `syntax(word: str, language: str = "english")` → returns USK syntax with elements and morphology
+
+Notes:
+
+- Set `ASK_GLYPH_PERSIST=1` to enable on‑disk learning for glyph field confidences used by the parser. This maps to the `persist` flag in the underlying services via `create_mcp_server()`.
+- If `fastmcp` is not installed, `ask-mcp` will print a helpful message explaining how to install it.
+
+Client integration:
+
+- Configure your MCP client to launch `ask-mcp` as a stdio server. In many editors/clients, this is set in an MCP server registry/config file with a command entry of `ask-mcp` and no args.
+
+### MCP Game
+
+The MCP server exposes a simple word guessing game with two tools: `test_me` and `guess`. Game state is persisted under `data/guesses/` as JSON files keyed by UUID.
+
+Tools
+
+- `test_me(length?: number, include?: string[], num?: number = 3)`
+  - Selects a secret word (not revealed).
+  - Filters:
+    - `length`: exact character length (optional)
+    - `include`: list of characters that must appear in the word (optional)
+  - Produces a left-to-right linear list of tags (operators/payload tags) of size `num` (default `3`). If `num` exceeds the number of available tags, all available tags are returned with a `warning` string.
+  - Response:
+    - `{ id: string, tags: string[], warning?: string }`
+
+- `guess(id: string, guesses: string[], reveal?: boolean = false)`
+  - Appends a guess attempt to the game, marks whether the latest guess is correct.
+  - When `reveal=true`, includes the secret word.
+  - Response:
+    - `{ attempts: number, correct: boolean, reveal?: { word: string } }`
+
+Storage
+
+- Files saved at `data/guesses/<uuid>.json` with shape:
+
+```json
+{
+  "id": "<uuid>",
+  "word": "<secret>",
+  "created_at": "<ISO8601>",
+  "params": { "length": 8, "include": ["a","t"], "num": 3 },
+  "tags": ["present", "base", "transform"],
+  "attempts": [
+    { "at": "<ISO8601>", "guesses": ["foobar"], "correct": false }
+  ]
+}
+```
+
+Examples (MCP client payloads)
+
+- Start a game with three tags:
+
+```json
+{
+  "tool": "test_me",
+  "params": { "num": 3 }
+}
+```
+
+- Start a game with filters and larger `num` (may return `warning` if too large):
+
+```json
+{
+  "tool": "test_me",
+  "params": { "length": 8, "include": ["a","t"], "num": 6 }
+}
+```
+
+- Submit a guess and request reveal:
+
+```json
+{
+  "tool": "guess",
+  "params": { "id": "<uuid>", "guesses": ["practice"], "reveal": true }
+}
+```
+
+Additional MCP examples
+
+- Fetch normalized merged lists (all sections):
+
+```json
+{ "tool": "merged_lists", "params": {} }
+```
+
+- Fetch only field entries:
+
+```json
+{ "tool": "merged_lists", "params": { "section": "field_entries" } }
+```
+
+### Merged Glyph Dataset
+
+To unify operator/payload maps (`data/glyphs.json`) with field-based glyph associations (`data/glyph_fields.json`) without losing information, use the merge script:
+
+```bash
+python tools/merge_glyph_datasets.py
+```
+
+This produces `data/glyphs_merged.json` with two top-level sections:
+
+- `merged` — Exact, lossless union of the source objects (maps from both files preserved verbatim).
+- `normalized` — List-based views for clients that prefer list-only interfaces. Sections include:
+  - `vowels`, `payload_entries`, `operator_entries`, `complete_operator_entries`, `typed_payload_entries`,
+    `cluster_entries`, `enhanced_cluster_entries`, `field_entries`, `tag_association_entries`.
+
+Programmatic access:
+
+- Python loader that always returns lists:
+
+```python
+from ask.merged_glyphs import get_merged_glyphs
+mg = get_merged_glyphs()
+fields = mg.field_entries()  # list
+operators = mg.operator_entries()  # list
+```
+
+- Services facade (returns dict of lists, or a single list when filtered):
+
+```python
+from ask.core.services import get_services
+s = get_services()
+all_lists = s.merged_lists()
+only_fields = s.merged_lists('field_entries')
+```
+
+- MCP tool (FastMCP):
+
+```json
+{ "tool": "merged_lists", "params": {} }
+{ "tool": "merged_lists", "params": { "section": "field_entries" } }
+```
+
+Verification: the merge script asserts that each `merged` subsection is identical to its source and that normalized entries preserve key sets.
+
+## Testing
+
+Run the full test suite with pytest:
+
+```bash
+pytest -q
+```
+
+Run a single test file:
+
+```bash
+pytest -q tests/test_readme_examples.py
+```
+
+Run a specific test:
+
+```bash
+pytest -q tests/test_readme_examples.py::test_decode_manipulation_json
+```
+
+## Advanced CLI
+
+- Stage-1 guessing using only descriptors (requires OPENAI_API_KEY):
+
+```bash
+ask audit-guess ask --guesses 5 --model gpt-5-mini
 ```
 
 ### ask-fields (field-based glyph analysis CLI)

@@ -36,7 +36,7 @@ Each glyph carries inherent geometric and articulatory affordances that bias its
 | **n** | `negate()` | Next/Not — al   ternative path | 85% | Alveolar nasal; bounded other. *no, not, new* |
 | **p** | `present()` | Press/Project — bounded emergence | 80% | Unvoiced bilabial pop. *put, present, propose* |
 | **q** | `query()` | Query — outlet from whole (+ u) | 85% | O+tail; reaches into unknown. *question, quest, quick* |
-| **r** | `rotate()` | Route/Recur — structural vibration | 90% | Rhotic trill; iteration/friction. *run, turn, repeat* |
+| **r** | `orient()` | Route/Recur — structural vibration | 90% | Rhotic trill; iteration/friction. *rotate,run, turn, repeat* |
 | **s** | `stream()` | Scan/Scatter — continuous flow | 95% | Sibilant; distribution. *see, send, system* |
 | **t** | `instantiate()` | Terminal/Tool — orthogonal pin | 95% | Alveolar stop; right-angle cut. *at, set, strict* |
 | **v** | `vector()` | Vector/Channel — directed flow | 85% | Voiced f; focused routing. *move, over, invert* |

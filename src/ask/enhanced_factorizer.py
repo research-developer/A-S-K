@@ -53,7 +53,7 @@ def segment_morphology_simple(surface: str) -> Dict[str, Optional[str]]:
     
     # Check suffixes
     for suf, _ in COMMON_SUFFIXES.items():
-        if root.endswith(suf) and len(root) > len(suf) + 2:
+        if root.endswith(suf) and len(root) > len(suf) + 2: # Require a root of at least 3 chars
             suffix = suf
             root = root[:-len(suf)]
             break
@@ -145,40 +145,35 @@ def generate_gloss(operators: List[str], payloads: List[Dict]) -> str:
 
 def pair_ops_with_payloads(surface: str) -> List[Tuple[str, Optional[str]]]:
     """
-    Enforce adjacency: each operator (consonant or recognized cluster) consumes the immediately
-    following vowel run (one or more vowels) as its payload, if present. If no vowel follows,
-    payload is None (suffix operator).
+    Enforce strict left-to-right adjacency: each operator (consonant or recognized cluster) 
+    consumes the immediately following vowel run as its payload. Process characters in order
+    to maintain sequence (e.g., 'mom' -> [('m', 'o'), ('m', None)]).
     Returns list of (operator_token, payload_string_or_None).
     """
     s = surface.lower()
     i = 0
     pairs: List[Tuple[str, Optional[str]]] = []
     
-    # Sort clusters by length to prefer longer ones first
-    cluster_keys = sorted(ENHANCED_CLUSTER_MAP.keys(), key=len, reverse=True)
-    
-    pending_vowel: Optional[str] = None
+    buffered_vowels = ""
     while i < len(s):
-        # Collect leading (or interstitial) vowel runs and attach to the next operator
+        # Accumulate leading vowels to attach to the next operator
         if s[i] in VOWELS:
-            start_v = i
-            while i < len(s) and s[i] in VOWELS:
-                i += 1
-            # Store to attach to next operator encountered
-            run = s[start_v:i]
-            # If multiple vowel runs appear before an operator, concatenate
-            pending_vowel = (pending_vowel or "") + run
+            buffered_vowels += s[i]
+            i += 1
             continue
         
-        # Identify next operator token
+        # Identify next operator token (prefer longer clusters)
         op_token = None
-        for ck in cluster_keys:
-            if s.startswith(ck, i):
-                op_token = ck
-                i += len(ck)
-                break
+        for cluster_len in [3, 2]:  # Try longest clusters first
+            if i + cluster_len <= len(s):
+                candidate = s[i:i+cluster_len]
+                if candidate in ENHANCED_CLUSTER_MAP:
+                    op_token = candidate
+                    i += cluster_len
+                    break
+        
         if op_token is None:
-            # Fallback to single consonant if present
+            # Try single character
             ch = s[i]
             if ch.isalpha() and ch not in VOWELS:
                 op_token = ch
@@ -187,12 +182,15 @@ def pair_ops_with_payloads(surface: str) -> List[Tuple[str, Optional[str]]]:
                 i += 1
                 continue
         
-        # Collect following vowel run as payload; if none, use any pending leading vowels
-        start = i
+        # Collect immediately following vowel run as payload
+        payload_start = i
         while i < len(s) and s[i] in VOWELS:
             i += 1
-        payload = s[start:i] or pending_vowel or None
-        pending_vowel = None
+        # Immediate payload after operator
+        immediate = s[payload_start:i] if payload_start < i else None
+        # If no immediate payload but we buffered a leading run, attach it now
+        payload = immediate if immediate else (buffered_vowels or None)
+        buffered_vowels = "" if payload else buffered_vowels
         pairs.append((op_token, payload))
     
     return pairs
