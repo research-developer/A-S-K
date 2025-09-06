@@ -6,33 +6,16 @@ This module centralizes program logic so different front-ends (CLI, Web API, MCP
 can consume the same functionality without duplicating implementation details.
 """
 
-from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 from ask.enhanced_factorizer import enhanced_decode_word
 from ask.merged_glyphs import get_merged_glyphs
 from ask.state_syntax import USKParser, TYPE_COLORS
 from ask.glyph_fields import GlyphFieldSystem
+from ask.core.models import DecodeResult, SyntaxResult
 
 
-@dataclass
-class DecodeResult:
-    word: str
-    decoded: Dict[str, Any]
-
-
-@dataclass
-class SyntaxResult:
-    word: str
-    language: str
-    syntax: str
-    elements: List[Dict[str, Any]]
-    overall_confidence: float
-    morphology: Dict[str, Any]
-    # Bindings of nearest payload(s) to an operator/function head
-    closures: List[Dict[str, Any]] | None = None
-    # Linear sequence of tokens with types and head linkage (no grouping)
-    sequence: List[Dict[str, Any]] | None = None
+"""Service returns use Pydantic models with list-based tags for transmorphic plurality."""
 
 
 class ASKServices:
@@ -71,13 +54,14 @@ class ASKServices:
                         op = pr[0]
                         pay = pr[1]
                         parts = str(pay).split("+") if isinstance(pay, str) and "+" in pay else ([pay] if pay else [])
-                        # Map single-vowel payloads to human-friendly tag if available
-                        payload_tag = None
+                        # Map single-vowel payloads to human-friendly tags (always a list)
+                        payload_tags: List[str] = []
                         if isinstance(pay, str) and len(pay) == 1:
-                            payload_tag = (self._typed_payload_by_vowel.get(pay) or {}).get("tag")
+                            maybe_tag = (self._typed_payload_by_vowel.get(pay) or {}).get("tag")
+                            payload_tags = [maybe_tag] if maybe_tag else []
                         payload_display = (
                             "+".join([ (self._typed_payload_by_vowel.get(p) or {}).get("tag", p) for p in parts ]) if (isinstance(pay, str) and "+" in pay)
-                            else (payload_tag or pay)
+                            else ((payload_tags[0] if payload_tags else None) or pay)
                         )
                         position = (
                             "initial" if idx == 0 else ("final" if idx == len(pairs) - 1 else "medial")
@@ -90,7 +74,7 @@ class ASKServices:
                             "op": op,
                             "principle": principle,
                             "payload": pay,
-                            "payload_tag": payload_tag,
+                            "payload_tags": payload_tags,
                             "payload_display": payload_display,
                             "payload_parts": [p for p in parts if p],
                         })
@@ -98,12 +82,13 @@ class ASKServices:
                 for idx, op in enumerate(ops):
                     pay = payloads[idx] if idx < len(payloads) else None
                     parts = str(pay).split("+") if isinstance(pay, str) and "+" in pay else ([pay] if pay else [])
-                    payload_tag = None
+                    payload_tags: List[str] = []
                     if isinstance(pay, str) and len(pay) == 1:
-                        payload_tag = (self._typed_payload_by_vowel.get(pay) or {}).get("tag")
+                        maybe_tag = (self._typed_payload_by_vowel.get(pay) or {}).get("tag")
+                        payload_tags = [maybe_tag] if maybe_tag else []
                     payload_display = (
                         "+".join([ (self._typed_payload_by_vowel.get(p) or {}).get("tag", p) for p in parts ]) if (isinstance(pay, str) and "+" in pay)
-                        else (payload_tag or pay)
+                        else ((payload_tags[0] if payload_tags else None) or pay)
                     )
                     position = (
                         "initial" if idx == 0 else ("final" if idx == len(ops) - 1 else "medial")
@@ -115,7 +100,7 @@ class ASKServices:
                         "op": op,
                         "principle": principle,
                         "payload": pay,
-                        "payload_tag": payload_tag,
+                        "payload_tags": payload_tags,
                         "payload_display": payload_display,
                         "payload_parts": [p for p in parts if p],
                     })
@@ -148,8 +133,8 @@ class ASKServices:
                     "principle": s.get("principle"),
                     # payload run (may be composite like "io")
                     "payload": s.get("payload"),
-                    # single-vowel tag if applicable (e.g., 'a' -> 'base')
-                    "payload_tag": s.get("payload_tag"),
+                    # tags list (if single-vowel, may contain 0..1 tag strings)
+                    "payload_tags": s.get("payload_tags") or [],
                     # split parts for composites (e.g., "i+o" -> ["i","o"])
                     "payload_parts": s.get("payload_parts") or [],
                 }
@@ -179,11 +164,36 @@ class ASKServices:
                         "role": "payload",
                         "type": "val",
                         "surface": pay,
-                        "tag": s.get("payload_tag"),
+                        "tags": s.get("payload_tags") or [],
                         "parts": s.get("payload_parts") or [],
                         "head_id": head_id,
                     })
-            decoded["sequence"] = sequence
+            # Pydantic validation and coercion for transmorphic plurality
+            try:
+                from ask.core.models import DecodeStep as _DecodeStep, DecodeClosure as _DecodeClosure, SequenceToken as _SequenceToken
+                # validate steps
+                validated_steps = [_DecodeStep(**{
+                    "index": s.get("index"),
+                    "position": s.get("position"),
+                    "op": s.get("op"),
+                    "principle": s.get("principle"),
+                    "payload": s.get("payload"),
+                    "payload_tags": s.get("payload_tags"),
+                    "payload_display": s.get("payload_display"),
+                    "payload_parts": s.get("payload_parts"),
+                }).model_dump() for s in steps]
+                decoded["program"]["steps"] = validated_steps
+
+                # validate closures
+                validated_closures = [_DecodeClosure(**c).model_dump() for c in decoded.get("closures", [])]
+                decoded["closures"] = validated_closures
+
+                # validate sequence
+                validated_seq = [_SequenceToken(**tok).model_dump() for tok in sequence]
+                decoded["sequence"] = validated_seq
+            except Exception:
+                # If validation fails, keep original structures
+                decoded["sequence"] = sequence
         except Exception:
             # Best effort; don't break decode if program shaping fails
             pass

@@ -137,7 +137,9 @@ class GlyphFieldSystem:
     def __init__(self, data_path: Optional[Path] = None, persist: Optional[bool] = None):
         self.fields: Dict[str, OperatorField] = {}
         self.tag_associations: Dict[str, Dict[str, float]] = defaultdict(dict)  # tag -> {glyph: confidence}
-        self.data_path = data_path or Path('/Users/preston/Projects/A-S-K/data/glyph_fields.json')
+        default_path = Path('/Users/preston/Projects/A-S-K/data/glyph_fields.json')
+        self._explicit_data_path = data_path is not None
+        self.data_path = data_path or default_path
         # Default to environment variable if not explicitly provided
         if persist is None:
             env_val = os.getenv('ASK_GLYPH_PERSIST', '0').strip().lower()
@@ -145,8 +147,11 @@ class GlyphFieldSystem:
         else:
             self.persist = bool(persist)
         self.initialize_fields()
-        # Always attempt to load saved confidences if a data_path is provided
-        self.load_confidence_data()
+        # Load saved confidences when persistence is enabled OR when a custom
+        # data path was explicitly provided (tests expect save/load behavior
+        # with a temp file path).
+        if self.persist or self._explicit_data_path:
+            self.load_confidence_data()
     
     def initialize_fields(self):
         """Initialize operator fields with baseline associations"""
