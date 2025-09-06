@@ -288,8 +288,8 @@
           "contexts": []
         },
         "clamp": {
-          "confidence": 0.6,
-          "evidence_count": 1,
+          "confidence": 0.7166666666666667,
+          "evidence_count": 3,
           "contexts": [
             "ask"
           ]
@@ -395,11 +395,6 @@
     },
     "n": {
       "tags": {
-        "in": {
-          "confidence": 0.5,
-          "evidence_count": 0,
-          "contexts": []
-        },
         "negate": {
           "confidence": 0.5,
           "evidence_count": 0,
@@ -426,6 +421,11 @@
           "contexts": []
         },
         "null": {
+          "confidence": 0.5,
+          "evidence_count": 0,
+          "contexts": []
+        },
+        "in": {
           "confidence": 0.5,
           "evidence_count": 0,
           "contexts": []
@@ -553,8 +553,8 @@
     "s": {
       "tags": {
         "stream": {
-          "confidence": 0.8727380952380953,
-          "evidence_count": 7,
+          "confidence": 1.0,
+          "evidence_count": 15,
           "contexts": [
             "stream",
             "strike",
@@ -947,7 +947,7 @@
       "k": 0.5
     },
     "clamp": {
-      "k": 0.6
+      "k": 0.7166666666666667
     },
     "kindle": {
       "k": 0.5
@@ -1076,7 +1076,7 @@
       "r": 0.5
     },
     "stream": {
-      "s": 0.8727380952380953
+      "s": 1.0
     },
     "scatter": {
       "s": 0.5

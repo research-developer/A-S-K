@@ -274,11 +274,12 @@ def operators(
     table.add_column("Principle", style="white", width=30)
     table.add_column("Confidence", justify="right", width=10)
 
-    sorted_ops = sorted(COMPLETE_OPERATOR_MAP.items(), key=lambda x: x[1]["confidence"], reverse=True)
-    for glyph, info in sorted_ops:
-        if info["confidence"] >= confidence:
-            conf_color = "green" if info["confidence"] > 0.85 else "yellow" if info["confidence"] > 0.75 else "red"
-            table.add_row(glyph.upper(), info["op"], info["principle"], f"[{conf_color}]{info['confidence']:.0%}[/{conf_color}]")
+    services = get_services()
+    sorted_ops = services.list_operators(min_conf=confidence)
+    for info in sorted_ops:
+        conf = info.get("confidence", 0.0) or 0.0
+        conf_color = "green" if conf > 0.85 else "yellow" if conf > 0.75 else "red"
+        table.add_row((info.get("glyph") or "?").upper(), info.get("operator") or "", info.get("principle") or "", f"[{conf_color}]{conf:.0%}[/{conf_color}]")
 
     console.print(table)
 
@@ -371,10 +372,12 @@ def clusters():
     table.add_column("Gloss", style="white", width=25)
     table.add_column("Confidence", justify="right", width=10)
 
-    sorted_clusters = sorted(ENHANCED_CLUSTER_MAP.items(), key=lambda x: (-len(x[0]), x[0]))
-    for cluster, info in sorted_clusters:
-        conf_color = "green" if info["confidence"] > 0.85 else "yellow" if info["confidence"] > 0.70 else "red"
-        table.add_row(cluster.upper(), " → ".join(info["ops"]), info["gloss"], f"[{conf_color}]{info['confidence']:.0%}[/{conf_color}]")
+    services = get_services()
+    sorted_clusters = services.list_clusters()
+    for info in sorted_clusters:
+        conf = info.get("confidence", 0.0) or 0.0
+        conf_color = "green" if conf > 0.85 else "yellow" if conf > 0.70 else "red"
+        table.add_row((info.get("cluster") or "").upper(), " → ".join(info.get("ops") or []), info.get("gloss") or "", f"[{conf_color}]{conf:.0%}[/{conf_color}]")
 
     console.print(table)
 
@@ -401,6 +404,8 @@ def batch(
     """Decode multiple words at once using the enhanced decoder."""
     word_list = [w.strip() for w in words.split(",")]
     results = []
+    # Local import to avoid potential circular import issues
+    from .enhanced_factorizer import enhanced_decode_word
     for w in word_list:
         decoded = enhanced_decode_word(w)
         if json_out:

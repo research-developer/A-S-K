@@ -9,8 +9,7 @@ can consume the same functionality without duplicating implementation details.
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from ask.enhanced_factorizer import enhanced_decode_word, COMPLETE_OPERATOR_MAP, ENHANCED_CLUSTER_MAP
-from ask.glyphs import TYPED_PAYLOAD_MAP
+from ask.enhanced_factorizer import enhanced_decode_word
 from ask.merged_glyphs import get_merged_glyphs
 from ask.state_syntax import USKParser, TYPE_COLORS
 from ask.glyph_fields import GlyphFieldSystem
@@ -44,6 +43,16 @@ class ASKServices:
         self.glyph_system = GlyphFieldSystem(persist=persist)
         self.parser = USKParser(glyph_system=self.glyph_system)
         self._merged = get_merged_glyphs()
+        # Precompute lookup maps from merged normalized lists
+        ml = self._merged
+        self._typed_payload_by_vowel: Dict[str, Dict[str, Any]] = {e.get("vowel"): e for e in ml.typed_payload_entries()}
+        self._complete_operator_by_glyph: Dict[str, Dict[str, Any]] = {e.get("glyph"): e for e in ml.complete_operator_entries()}
+        self._operator_by_name: Dict[str, Dict[str, Any]] = {}
+        for e in ml.complete_operator_entries():
+            op = e.get("op")
+            if op:
+                self._operator_by_name[op] = e
+        self._enhanced_clusters: List[Dict[str, Any]] = ml.enhanced_cluster_entries()
 
     # Enhanced decode (factorizer-centric)
     def decode(self, word: str) -> DecodeResult:
@@ -65,15 +74,16 @@ class ASKServices:
                         # Map single-vowel payloads to human-friendly tag if available
                         payload_tag = None
                         if isinstance(pay, str) and len(pay) == 1:
-                            payload_tag = (TYPED_PAYLOAD_MAP.get(pay) or {}).get("tag")
+                            payload_tag = (self._typed_payload_by_vowel.get(pay) or {}).get("tag")
                         payload_display = (
-                            "+".join([ (TYPED_PAYLOAD_MAP.get(p) or {}).get("tag", p) for p in parts ]) if (isinstance(pay, str) and "+" in pay)
+                            "+".join([ (self._typed_payload_by_vowel.get(p) or {}).get("tag", p) for p in parts ]) if (isinstance(pay, str) and "+" in pay)
                             else (payload_tag or pay)
                         )
                         position = (
                             "initial" if idx == 0 else ("final" if idx == len(pairs) - 1 else "medial")
                         )
-                        principle = COMPLETE_OPERATOR_MAP.get(op, {}).get("principle") if isinstance(op, str) else None
+                        # Map operator name to its principle using merged complete_operator_entries
+                        principle = (self._operator_by_name.get(op) or {}).get("principle") if isinstance(op, str) else None
                         steps.append({
                             "index": idx,
                             "position": position,
@@ -90,15 +100,15 @@ class ASKServices:
                     parts = str(pay).split("+") if isinstance(pay, str) and "+" in pay else ([pay] if pay else [])
                     payload_tag = None
                     if isinstance(pay, str) and len(pay) == 1:
-                        payload_tag = (TYPED_PAYLOAD_MAP.get(pay) or {}).get("tag")
+                        payload_tag = (self._typed_payload_by_vowel.get(pay) or {}).get("tag")
                     payload_display = (
-                        "+".join([ (TYPED_PAYLOAD_MAP.get(p) or {}).get("tag", p) for p in parts ]) if (isinstance(pay, str) and "+" in pay)
+                        "+".join([ (self._typed_payload_by_vowel.get(p) or {}).get("tag", p) for p in parts ]) if (isinstance(pay, str) and "+" in pay)
                         else (payload_tag or pay)
                     )
                     position = (
                         "initial" if idx == 0 else ("final" if idx == len(ops) - 1 else "medial")
                     )
-                    principle = COMPLETE_OPERATOR_MAP.get(op, {}).get("principle") if isinstance(op, str) else None
+                    principle = (self._operator_by_name.get(op) or {}).get("principle") if isinstance(op, str) else None
                     steps.append({
                         "index": idx,
                         "position": position,
@@ -339,37 +349,32 @@ class ASKServices:
 
     def list_operators(self, min_conf: float = 0.0) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
-        for glyph, info in COMPLETE_OPERATOR_MAP.items():
-            if info["confidence"] >= min_conf:
+        for e in self._complete_operator_by_glyph.values():
+            if e.get("confidence", 0) >= min_conf:
                 out.append({
-                    "glyph": glyph,
-                    "operator": info["op"],
-                    "principle": info["principle"],
-                    "confidence": info["confidence"],
+                    "glyph": e.get("glyph"),
+                    "operator": e.get("op"),
+                    "principle": e.get("principle"),
+                    "confidence": e.get("confidence"),
                 })
-        # Sort by confidence desc
-        out.sort(key=lambda x: x["confidence"], reverse=True)
+        out.sort(key=lambda x: x["confidence"] or 0, reverse=True)
         return out
 
     def list_clusters(self) -> List[Dict[str, Any]]:
         out: List[Dict[str, Any]] = []
-        for cluster, info in ENHANCED_CLUSTER_MAP.items():
+        for e in self._enhanced_clusters:
             out.append({
-                "cluster": cluster,
-                "ops": info["ops"],
-                "gloss": info["gloss"],
-                "confidence": info["confidence"],
+                "cluster": e.get("cluster"),
+                "ops": e.get("ops"),
+                "gloss": e.get("gloss"),
+                "confidence": e.get("confidence"),
             })
-        # sort by length desc then alpha
-        out.sort(key=lambda x: (-len(x["cluster"]), x["cluster"]))
+        out.sort(key=lambda x: (-len(x["cluster"] or ""), x["cluster"] or ""))
         return out
 
     def get_operator_info(self, operator: str) -> Optional[Dict[str, Any]]:
-        """Return operator map info by operator name (reverse lookup)."""
-        for glyph, info in COMPLETE_OPERATOR_MAP.items():
-            if info.get("op") == operator:
-                return info
-        return None
+        """Return operator info by operator name using merged lists."""
+        return self._operator_by_name.get(operator)
 
 
 def get_services(persist: Optional[bool] = None) -> ASKServices:

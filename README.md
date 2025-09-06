@@ -248,6 +248,12 @@ ask decode manipulation --simple
 # JSON output for scripting
 ask decode manipulation --json
 
+# Syntax parsing (pretty)
+ask syntax patriarch
+
+# Syntax parsing (JSON)
+ask syntax heaven --json
+
 # Verbose analysis with operator principles and payload types
 ask decode manipulation --verbose
 
@@ -262,6 +268,7 @@ FIRECRAWL_API_KEY=fc-... ask extract-batch --file urls.txt > results.json
 
 # List operators or clusters with confidence
 ask operators
+ask operators --min-confidence 0.85
 ask clusters
 
 # Validate the ASK kernel proof and run self-tests
@@ -378,6 +385,20 @@ Examples (MCP client payloads)
 }
 ```
 
+Additional MCP examples
+
+- Fetch normalized merged lists (all sections):
+
+```json
+{ "tool": "merged_lists", "params": {} }
+```
+
+- Fetch only field entries:
+
+```json
+{ "tool": "merged_lists", "params": { "section": "field_entries" } }
+```
+
 ### Merged Glyph Dataset
 
 To unify operator/payload maps (`data/glyphs.json`) with field-based glyph associations (`data/glyph_fields.json`) without losing information, use the merge script:
@@ -421,6 +442,34 @@ only_fields = s.merged_lists('field_entries')
 ```
 
 Verification: the merge script asserts that each `merged` subsection is identical to its source and that normalized entries preserve key sets.
+
+## Testing
+
+Run the full test suite with pytest:
+
+```bash
+pytest -q
+```
+
+Run a single test file:
+
+```bash
+pytest -q tests/test_readme_examples.py
+```
+
+Run a specific test:
+
+```bash
+pytest -q tests/test_readme_examples.py::test_decode_manipulation_json
+```
+
+## Advanced CLI
+
+- Stage-1 guessing using only descriptors (requires OPENAI_API_KEY):
+
+```bash
+ask audit-guess ask --guesses 5 --model gpt-5-mini
+```
 
 ### ask-fields (field-based glyph analysis CLI)
 
