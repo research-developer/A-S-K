@@ -11,6 +11,7 @@ from collections import defaultdict
 import json
 from pathlib import Path
 import os
+from ask.merged_glyphs_db import get_db_merged
 
 @dataclass
 class OperatorTag:
@@ -154,9 +155,74 @@ class GlyphFieldSystem:
             self.load_confidence_data()
     
     def initialize_fields(self):
-        """Initialize operator fields with baseline associations"""
-        
-        # Define initial field associations with conservative confidence
+        """Initialize operator fields with baseline associations from the DB.
+
+        Falls back to legacy hardcoded associations only if DB is unavailable.
+        """
+        # Try DB-backed initialization first
+        try:
+            mg = get_db_merged()
+            # Load glyph field entries from DB
+            entries = mg.field_entries() or []
+            if entries:
+                for e in entries:
+                    glyph = e.get('glyph')
+                    if not glyph:
+                        continue
+                    field_obj = OperatorField(glyph)
+                    # Tags with confidence and contexts
+                    for t in (e.get('tags') or []):
+                        tag = t.get('tag')
+                        if not tag:
+                            continue
+                        conf_raw = t.get('confidence', 0.5)
+                        conf = float(conf_raw) if conf_raw is not None else 0.5
+                        # Preserve headroom so tests and learning can increase confidence
+                        if conf > 0.95:
+                            conf = 0.95
+                        evid = t.get('evidence_count', 0)
+                        ctxs = list(t.get('contexts') or [])
+                        field_obj.add_tag(tag, initial_confidence=conf)
+                        # Update stored attributes to preserve evidence/context metadata
+                        if tag in field_obj.tags:
+                            field_obj.tags[tag].evidence_count = evid or 0
+                            field_obj.tags[tag].contexts = ctxs[:10]
+                        # Reverse mapping for tag associations
+                        self.tag_associations[tag][glyph] = conf
+
+                    # Position preferences
+                    prefs_list = e.get('position_preferences') or []
+                    if prefs_list:
+                        pp: Dict[str, Dict[str, float]] = {}
+                        for p in prefs_list:
+                            pos = p.get('position')
+                            name = p.get('name')
+                            score = p.get('score')
+                            if not pos or not name:
+                                continue
+                            pp.setdefault(pos, {})[name] = float(score) if score is not None else 0.0
+                        field_obj.position_preferences = pp
+
+                    # Cluster behaviors
+                    cb_list = e.get('cluster_behaviors') or []
+                    if cb_list:
+                        cb: Dict[str, str] = {}
+                        for c in cb_list:
+                            cl = c.get('cluster')
+                            val = c.get('value')
+                            if cl and val:
+                                cb[cl] = val
+                        field_obj.cluster_behaviors = cb
+
+                    self.fields[glyph] = field_obj
+
+                # DB init complete
+                return
+        except Exception:
+            # Fallback to legacy baseline if DB access fails
+            pass
+
+        # Legacy fallback: define initial field associations with conservative confidence
         initial_associations = {
             'b': {
                 'tags': ['boundary', 'bulge', 'birth', 'bind', 'base', 'block'],
@@ -197,13 +263,15 @@ class GlyphFieldSystem:
                 'clusters': {'sk': 'scan-cut', 'ck': 'terminal-cut'}
             },
             'l': {
-                'tags': ['line', 'link', 'lift', 'liquid', 'locus', 'extend']
+                'tags': ['align', 'line', 'link', 'lift', 'liquid', 'locus', 'extend'],
+                'preferred': 'align'
             },
             'm': {
                 'tags': ['matrix', 'multiply', 'mold', 'measure', 'merge', 'memory', 'mother']
             },
             'n': {
-                'tags': ['negate', 'navigate', 'new', 'name', 'narrow', 'null']
+                'tags': ['in', 'negate', 'navigate', 'new', 'name', 'narrow', 'null'],
+                'preferred': 'in'
             },
             'p': {
                 'tags': ['present', 'pulse', 'potential', 'point', 'pierce', 'parent'],
@@ -240,15 +308,18 @@ class GlyphFieldSystem:
             }
         }
         
-        # Build fields with initial confidence
+        # Build fields with initial confidence (legacy fallback)
         for glyph, config in initial_associations.items():
             field_obj = OperatorField(glyph)
             
             # Add tags with baseline confidence
             for tag in config.get('tags', []):
-                field_obj.add_tag(tag, initial_confidence=0.5)
+                # Boost preferred tag confidence to make it primary
+                pref = config.get('preferred')
+                init_conf = 0.8 if pref and tag == pref else 0.5
+                field_obj.add_tag(tag, initial_confidence=init_conf)
                 # Track reverse association
-                self.tag_associations[tag][glyph] = 0.5
+                self.tag_associations[tag][glyph] = init_conf
             
             # Add position preferences if specified
             if 'position_prefs' in config:

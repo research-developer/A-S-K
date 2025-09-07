@@ -53,5 +53,15 @@ class MergedGlyphs:
         return dict(self.union)
 
 
-def get_merged_glyphs(path: Path | None = None) -> MergedGlyphs:
+def get_merged_glyphs(path: Path | None = None):
+    """Factory that prefers the SQLite DB as ground truth when available.
+
+    If data/glyphs.db exists, return a DB-backed provider with identical list API.
+    Otherwise, return the JSON-backed MergedGlyphs for compatibility.
+    """
+    db_path = Path(__file__).resolve().parents[2] / "data" / "glyphs.db"
+    if db_path.exists():
+        # Import here to avoid import cycles at module import time
+        from ask.merged_glyphs_db import get_db_merged
+        return get_db_merged(db_path)
     return MergedGlyphs(path)

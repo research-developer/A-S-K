@@ -319,9 +319,9 @@ class USKParser:
         """Get semantic interpretation of vowel payload"""
         if len(vowel_run) == 1:
             payload_map = {
-                'a': 'base/origin',
+                'a': 'a',
                 'e': 'relation/edge', 
-                'i': 'index/minimal',
+                'i': 'identify',
                 'o': 'container/whole',
                 'u': 'channel/depth',
                 'y': 'branch/choice'
