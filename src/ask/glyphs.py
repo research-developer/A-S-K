@@ -1,21 +1,27 @@
 from __future__ import annotations
 
 from typing import Any, Dict
+import os
 import sqlite3
 from pathlib import Path
 
 from ask.merged_glyphs_db import get_db_merged
+from ask.merged_glyphs import get_merged_glyphs
 
-# Compute default DB path locally to avoid importing ask.core (which imports services)
-_DEFAULT_DB_PATH = Path(__file__).resolve().parents[2] / "data" / "glyphs.db"
+# Compute candidate DB paths (installed vs editable vs CWD)
+_PKG_BASE = Path(__file__).resolve().parents[2]
+_CANDIDATE_DB_PATHS = [
+    _PKG_BASE / "data" / "glyphs.db",           # package-relative
+    Path.cwd() / "data" / "glyphs.db",          # cwd-relative
+]
+_ENV_DB = os.getenv("ASK_DB_PATH")
+if _ENV_DB:
+    _CANDIDATE_DB_PATHS.insert(0, Path(_ENV_DB))
 
 
-def _load_from_db() -> Dict[str, Any]:
-    """Load glyph primitives from the SQLite DB (atomic ground truth).
-
-    Returns a dict with keys matching the previous JSON structure for compatibility.
-    """
-    mg = get_db_merged(_DEFAULT_DB_PATH)
+def _load_from_db(db_path: Path) -> Dict[str, Any]:
+    """Load glyph primitives from the SQLite DB (atomic ground truth)."""
+    mg = get_db_merged(db_path)
 
     # Vowels as a contiguous string (historical API)
     vowels_list = mg.vowels() or []
@@ -81,7 +87,7 @@ def _load_from_db() -> Dict[str, Any]:
             enhanced_cluster_map[cl]["ops"] = ordered
 
     # Named payloads come from their own table; query directly
-    conn = sqlite3.connect(str(_DEFAULT_DB_PATH))
+    conn = sqlite3.connect(str(db_path))
     try:
         rows = conn.execute("SELECT name, type, tag, principle, features, confidence FROM named_payloads").fetchall()
     finally:
@@ -107,8 +113,87 @@ def _load_from_db() -> Dict[str, Any]:
         "named_payloads": named_payloads,
     }
 
+def _load_data() -> Dict[str, Any]:
+    # 1) Try DB candidates
+    for path in _CANDIDATE_DB_PATHS:
+        try:
+            if path.exists():
+                return _load_from_db(path)
+        except Exception:
+            continue
+    # 2) Try merged JSON provider (if available)
+    try:
+        mg = get_merged_glyphs()
+        # Build maps from merged provider
+        vowels = "".join(mg.vowels() or list("aeiouy"))
+        payload_map: Dict[str, Dict[str, Any]] = {}
+        for e in mg.typed_payload_entries():
+            v = e.get("vowel")
+            if v:
+                payload_map[v] = {
+                    "type": e.get("type"),
+                    "tag": e.get("tag"),
+                    "principle": e.get("principle"),
+                    "confidence": e.get("confidence", 0.7),
+                }
+        operator_map = {}
+        for e in mg.operator_entries():
+            g = e.get("glyph"); val = e.get("value")
+            if g and val:
+                operator_map[g] = val
+        complete_operator_map = {}
+        for e in mg.complete_operator_entries():
+            g = e.get("glyph")
+            if g:
+                complete_operator_map[g] = {
+                    "op": e.get("op"),
+                    "principle": e.get("principle"),
+                    "confidence": e.get("confidence", 0.7),
+                }
+        cluster_map = {}
+        for e in mg.cluster_entries():
+            cluster_map[e.get("cluster")] = list(e.get("value") or [])
+        enhanced_cluster_map = {}
+        for e in mg.enhanced_cluster_entries():
+            enhanced_cluster_map[e.get("cluster")] = {
+                "ops": list(e.get("ops") or []),
+                "gloss": e.get("gloss"),
+                "confidence": e.get("confidence", 0.7),
+            }
+        # Order fix for sk/sc
+        for cl in ("sk","sc"):
+            if cl in enhanced_cluster_map:
+                ops = enhanced_cluster_map[cl].get("ops") or []
+                ordered = [op for op in ["stream","clamp"] if op in ops]
+                ordered += [op for op in ops if op not in ordered]
+                enhanced_cluster_map[cl]["ops"] = ordered
+        return {
+            "vowels": vowels,
+            "payload_map": payload_map,
+            "operator_map": operator_map,
+            "cluster_map": cluster_map,
+            "enhanced_cluster_map": enhanced_cluster_map,
+            "complete_operator_map": complete_operator_map,
+            "typed_payload_map": payload_map,
+            "named_payloads": {},
+        }
+    except Exception:
+        pass
 
-_DATA = _load_from_db()
+    # 3) Minimal built-in defaults as last resort
+    return {
+        "vowels": "aeiouy",
+        "payload_map": {},
+        "operator_map": {},
+        "cluster_map": {},
+        "enhanced_cluster_map": {},
+        "complete_operator_map": {},
+        "typed_payload_map": {},
+        "named_payloads": {},
+    }
+
+
+_DATA = _load_data()
 
 VOWELS: str = _DATA["vowels"]
 PAYLOAD_MAP: Dict[str, Dict[str, Any]] = _DATA["payload_map"]
