@@ -33,6 +33,7 @@ src/ask/core/services.py
 src/ask/mcp/fastmcp_server.py
 src/ask/mcp/server.py
 src/ask/web/app.py
+tests/test_cli_help.py
 tests/test_enhanced.py
 tests/test_factorizer.py
 tests/test_fields.py

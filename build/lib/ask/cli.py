@@ -10,11 +10,13 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 
-from ask.audit import audit_decoding, audit_guess, audit_guess_async
-from ask.extractor import extract_article
-from ask.enhanced_factorizer import validate_ask_kernel
-from ask.core import get_services
-from ask.core.services import TYPE_COLORS
+from .audit import audit_decoding, audit_guess, audit_guess_async
+from .extractor import extract_article
+from .enhanced_factorizer import (
+    validate_ask_kernel,
+)
+from .core import get_services
+from .core.services import TYPE_COLORS
 
 app = typer.Typer(add_completion=False, help="A-S-K: Unified CLI (enhanced by default)")
 console = Console()
@@ -135,13 +137,13 @@ def audit(
     ),
 ):
     """Audit a decoded WORD using an OpenAI model (requires OPENAI_API_KEY)."""
-    from ask.enhanced_factorizer import enhanced_decode_word
     decoded = enhanced_decode_word(word)
     try:
         report = audit_decoding(word, decoded, model=model, temperature=temperature)
     except Exception as e:
         typer.secho(f"Audit failed: {e}", fg=typer.colors.RED)
         raise typer.Exit(code=1)
+    # Print the primary audit result first
     payload = {
         "word": word,
         "decoded": decoded,
@@ -154,7 +156,7 @@ def audit(
         console.print(report)
 
     # Optional: stage-1 guessing (descriptor-only)
-    k: Optional[int] = guess
+    k: Optional[int] = guess  # when provided without value, Typer/Click sets flag_value=10
     if k:
         try:
             res = audit_guess(decoded, k=k, model=model, temperature=temperature)
@@ -162,6 +164,7 @@ def audit(
             typer.secho(f"Guessing failed: {e}", fg=typer.colors.RED)
             raise typer.Exit(code=1)
         if json_out:
+            # emit only the guesses array to keep stdout machine-consumable; user can combine as they like
             typer.echo(json.dumps({"guesses": res.get("guesses", [])}, indent=2))
         else:
             console.print(f"\n[bold]LLM Guesses (k={k}):[/bold]")
@@ -179,7 +182,11 @@ def audit_guess_cmd(
     json_out: bool = typer.Option(True, help="Emit JSON (recommended)"),
     use_async: bool = typer.Option(True, "--async", help="Use async batching when multiple inputs provided"),
 ):
-    """Stage-1 auditor: Send ONLY descriptors to the model and request top-K surface word guesses."""
+    """Stage-1 auditor: Send ONLY descriptors to the model and request top-K surface word guesses.
+
+    - For multiple inputs, you can pass words as arguments and/or via --file.
+    - Uses async batching by default for throughput when multiple inputs are given.
+    """
     inputs: List[str] = []
     if file:
         try:
@@ -198,8 +205,10 @@ def audit_guess_cmd(
         typer.secho("No words provided. Pass one or more words or use --file.", fg=typer.colors.RED)
         raise typer.Exit(code=1)
 
-    from ask.enhanced_factorizer import enhanced_decode_word
+    # Do not send the surface forms to the model; only descriptors derived from the enhanced decoder
+    from .enhanced_factorizer import enhanced_decode_word  # local import to avoid cycles
 
+    # Single input: do simple sync call to avoid event loop overhead
     if len(inputs) == 1 or not use_async:
         w = inputs[0]
         decoded = enhanced_decode_word(w)
@@ -212,6 +221,7 @@ def audit_guess_cmd(
         typer.echo(json.dumps(payload if json_out else res, indent=2) if json_out else ", ".join(payload["guesses"]))
         raise typer.Exit()
 
+    # Multiple inputs: async batch
     async def _run_batch():
         tasks = []
         decodeds = []
@@ -231,6 +241,7 @@ def audit_guess_cmd(
     try:
         out = asyncio.run(_run_batch())
     except RuntimeError:
+        # In case of already running loop (e.g., in notebooks), fallback to new loop
         loop = asyncio.new_event_loop()
         try:
             asyncio.set_event_loop(loop)
@@ -244,6 +255,7 @@ def audit_guess_cmd(
     if json_out:
         typer.echo(json.dumps(out, indent=2))
     else:
+        # Print simple lines: word: g1, g2, ...
         for item in out:
             if "error" in item:
                 typer.echo(f"{item['word']}: ERROR {item['error']}")
@@ -278,9 +290,12 @@ def syntax(
     language: str = typer.Option("english", "--language", "-l", help="Language of the word (english|latin)"),
     json_out: bool = typer.Option(False, "--json", help="Output as JSON"),
     persist: bool = typer.Option(False, "--persist", help="Enable saving/loading glyph field confidence data"),
-    no_confidence: bool = typer.Option(False, "--no-confidence", help="Hide overall confidence in the legend"),
 ):
-    """Parse a WORD into USK syntax using the state-aware parser."""
+    """Parse a WORD into USK syntax using the state-aware parser.
+
+    Use --persist to enable on-disk learning of glyph field confidences (overrides ASK_GLYPH_PERSIST).
+    """
+    # Local imports to avoid cycles
     services = get_services(persist=persist)
     result = services.syntax(word, language=language)
 
@@ -296,12 +311,12 @@ def syntax(
         typer.echo(json.dumps(payload, indent=2))
         return
 
+    # Legend panel
     legend_lines = []
+    # Only show the four primary types as requested
     for key, label in [("val", "Value"), ("op", "Operator"), ("func", "Function"), ("struct", "Struct")]:
         color = TYPE_COLORS.get(key, "white")
         legend_lines.append(f"[{color}]{label}[/{color}]")
-    if not no_confidence:
-        legend_lines.append(f"[bright_magenta]Confidence {result.overall_confidence:.1%}[/bright_magenta]")
     legend_text = "  ".join(legend_lines)
     console.print(Panel(legend_text, title="Legend", border_style="cyan"))
 
@@ -309,33 +324,44 @@ def syntax(
     table.add_column("Component", style="cyan")
     table.add_column("Value", style="white")
     table.add_row("Syntax", result.syntax)
+    table.add_row("Confidence", f"{result.overall_confidence:.1%}")
+    morph = result.morphology or {}
+    morph_str = f"prefix: {morph.get('prefix') or '—'}, root: {morph.get('root')}, suffix: {morph.get('suffix') or '—'}"
+    table.add_row("Morphology", morph_str)
     console.print(table)
 
+    # Brief breakdown
     if result.elements:
         console.print("\n[bold]Elements:[/bold]")
+        # local mapping to shorten types for color selection
+        from .state_syntax import ElementType
+        type_map = {
+            ElementType.OPERATOR: "op",
+            ElementType.FUNCTION: "func",
+            ElementType.PAYLOAD: "val",
+            ElementType.MODIFIER: "mod",
+            ElementType.STATE: "state",
+        }
         for e in result.elements:
+            # Elements are dicts in the services payload
             semantic = e.get("semantic")
             state_val = e.get("state")
             position = e.get("position")
             confidence = e.get("confidence", 0.0)
             surface = e.get("surface")
-            # Prefer server-provided type to avoid heuristic miscoloring
-            t = (e.get("type") or "").lower()
-            short_type = {
-                "operator": "op",
-                "function": "func",
-                "value": "val",
-                "modifier": "mod",
-                "state": "state",
-            }.get(t, "val")
-            if short_type == "val" and "+" in (semantic or ""):
+            # Infer type for coloring
+            short_type = "val"
+            if "+" in (semantic or ""):
                 short_type = "struct"
+            elif semantic in ("matrix","negate","present","line","transform","rotate","stream","gather","define","resonate"):
+                short_type = "op"
+            # functions are recognized clusters; best-effort check
+            elif surface and len(surface) > 1 and semantic not in ("a","e","i","o","u"):
+                short_type = "func"
             color = TYPE_COLORS.get(short_type, None)
             colored_sem = f"[{color}]{semantic}[/{color}]" if color else semantic
             state_info = f" [{state_val}]" if state_val and str(state_val) != "?" else ""
-            # Removed position and confidence annotation from element rows
-            console.print(f"  {surface}: {colored_sem}{state_info}")
-
+            console.print(f"  {surface}: {colored_sem}{state_info} [dim]({position}, conf {confidence:.0%})[/dim]")
 
 @app.command()
 def clusters():
@@ -378,7 +404,8 @@ def batch(
     """Decode multiple words at once using the enhanced decoder."""
     word_list = [w.strip() for w in words.split(",")]
     results = []
-    from ask.enhanced_factorizer import enhanced_decode_word
+    # Local import to avoid potential circular import issues
+    from .enhanced_factorizer import enhanced_decode_word
     for w in word_list:
         decoded = enhanced_decode_word(w)
         if json_out:
@@ -429,6 +456,7 @@ def extract(
     if json_out:
         typer.echo(json.dumps(res, indent=2))
     else:
+        # Print plain text only for piping into downstream tools
         text = res.get("text") or ""
         typer.echo(text)
 
@@ -440,7 +468,11 @@ def extract_batch(
     json_out: bool = typer.Option(True, help="Emit JSON list of results (recommended). With --no-json-out, prints plain text concatenated with separators."),
     no_cache: bool = typer.Option(False, "--no-cache", help="Do not write cache files for this run"),
 ):
-    """Batch extract minimalistic article text using Firecrawl."""
+    """Batch extract minimalistic article text using Firecrawl.
+
+    Accepts multiple URL arguments and/or --file with URLs per line.
+    Results are cached under .cache/ per-URL.
+    """
     inputs: List[str] = []
     if file:
         try:
@@ -470,13 +502,13 @@ def extract_batch(
     if json_out:
         typer.echo(json.dumps(results, indent=2))
     else:
+        # Concatenate plain text with separators
         sep = "\n\n" + ("-" * 40) + "\n\n"
         texts = []
         for r in results:
             t = r.get("text") or ""
             texts.append(t)
         typer.echo(sep.join(texts))
-
 
 def main():
     app()
