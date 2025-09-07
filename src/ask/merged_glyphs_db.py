@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from ask.core.db import get_connection, DEFAULT_DB_PATH
+# Compute default DB path without importing ask.core to avoid circular imports
+_DEFAULT_DB_PATH = Path(__file__).resolve().parents[2] / "data" / "glyphs.db"
 
 
 class DBMergedGlyphs:
@@ -15,8 +17,10 @@ class DBMergedGlyphs:
     """
 
     def __init__(self, db_path: Path | None = None) -> None:
-        self.db_path = Path(db_path) if db_path else DEFAULT_DB_PATH
-        self.conn = get_connection(self.db_path)
+        self.db_path = Path(db_path) if db_path else _DEFAULT_DB_PATH
+        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self.conn = sqlite3.connect(str(self.db_path))
+        self.conn.row_factory = sqlite3.Row
 
     # --- Normalized accessors (always lists) ---
     def vowels(self) -> List[str]:
@@ -25,9 +29,13 @@ class DBMergedGlyphs:
 
     def payload_entries(self) -> List[Dict[str, Any]]:
         # Non-typed fallback: emulate shape
-        rows = self.conn.execute(
+        # Use lightweight connection here to avoid depending on ask.core
+        conn = sqlite3.connect(str(self.db_path))
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute(
             "SELECT vowel, type, tag, principle, confidence FROM payloads ORDER BY vowel"
         ).fetchall()
+        conn.close()
         return [
             {
                 "vowel": r[0],
