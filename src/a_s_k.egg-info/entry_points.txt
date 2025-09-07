@@ -1,4 +1,4 @@
 [console_scripts]
-ask = ask.cli:main
-ask-fields = ask.cli_fields:cli
+ask = ask.CLI.main:main
+ask-fields = ask.CLI.fields:cli
 ask-mcp = ask.mcp.fastmcp_server:main

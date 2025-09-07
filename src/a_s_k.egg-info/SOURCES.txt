@@ -1,4 +1,6 @@
 LICENSE
+LICENSE.MIT
+NOTICE
 README.md
 pyproject.toml
 src/a_s_k.egg-info/PKG-INFO
@@ -10,8 +12,6 @@ src/a_s_k.egg-info/top_level.txt
 src/ask/__init__.py
 src/ask/audit.py
 src/ask/cli.py
-src/ask/cli_fields.py
-src/ask/cli_syntax.py
 src/ask/compose.py
 src/ask/enhanced_factorizer.py
 src/ask/extractor.py
@@ -20,8 +20,15 @@ src/ask/glyph_fields.py
 src/ask/glyphs.py
 src/ask/glyphs_fields.py
 src/ask/merged_glyphs.py
+src/ask/merged_glyphs_db.py
 src/ask/state_syntax.py
+src/ask/CLI/__init__.py
+src/ask/CLI/fields.py
+src/ask/CLI/main.py
+src/ask/CLI/syntax.py
 src/ask/core/__init__.py
+src/ask/core/db.py
+src/ask/core/models.py
 src/ask/core/services.py
 src/ask/mcp/fastmcp_server.py
 src/ask/mcp/server.py
@@ -29,4 +36,5 @@ src/ask/web/app.py
 tests/test_enhanced.py
 tests/test_factorizer.py
 tests/test_fields.py
+tests/test_mcp_guess.py
 tests/test_readme_examples.py
