@@ -329,6 +329,7 @@ class ASKServices:
                 {
                     "surface": e.surface,
                     "semantic": e.semantic,
+                    "type": getattr(e.element_type, "value", None),
                     "position": e.position,
                     "confidence": e.confidence,
                     "state": str(e.state) if e.state else None,

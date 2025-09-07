@@ -314,27 +314,23 @@ def syntax(
 
     if result.elements:
         console.print("\n[bold]Elements:[/bold]")
-        from ask.state_syntax import ElementType  # local mapping used for clarity
-        type_map = {
-            ElementType.OPERATOR: "op",
-            ElementType.FUNCTION: "func",
-            ElementType.PAYLOAD: "val",
-            ElementType.MODIFIER: "mod",
-            ElementType.STATE: "state",
-        }
         for e in result.elements:
             semantic = e.get("semantic")
             state_val = e.get("state")
             position = e.get("position")
             confidence = e.get("confidence", 0.0)
             surface = e.get("surface")
-            short_type = "val"
-            if "+" in (semantic or ""):
+            # Prefer server-provided type to avoid heuristic miscoloring
+            t = (e.get("type") or "").lower()
+            short_type = {
+                "operator": "op",
+                "function": "func",
+                "value": "val",
+                "modifier": "mod",
+                "state": "state",
+            }.get(t, "val")
+            if short_type == "val" and "+" in (semantic or ""):
                 short_type = "struct"
-            elif semantic in ("matrix","negate","present","line","transform","rotate","stream","gather","define","resonate"):
-                short_type = "op"
-            elif surface and len(surface) > 1 and semantic not in ("a","e","i","o","u"):
-                short_type = "func"
             color = TYPE_COLORS.get(short_type, None)
             colored_sem = f"[{color}]{semantic}[/{color}]" if color else semantic
             state_info = f" [{state_val}]" if state_val and str(state_val) != "?" else ""
