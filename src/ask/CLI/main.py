@@ -374,6 +374,7 @@ def validate():
 def batch(
     words: str = typer.Argument(..., help="Comma-separated list of words"),
     json_out: bool = typer.Option(False, "--json", help="Output as JSON"),
+    width: int = typer.Option(None, "--width", help="Terminal width for rendering tables (e.g., 120)"),
 ):
     """Decode multiple words at once using the enhanced decoder."""
     word_list = [w.strip() for w in words.split(",")]
@@ -394,7 +395,9 @@ def batch(
     if json_out:
         typer.echo(json.dumps(results, indent=2))
     else:
-        table = Table(title="[bold cyan]Batch Decoding[/bold cyan]")
+        # Use a local console if a width override was provided
+        local_console = Console(width=width) if width else console
+        table = Table(title="[bold cyan]Batch Decoding[/bold cyan]", expand=True)
         table.add_column("Word", style="cyan")
         table.add_column("Operators", style="yellow")
         table.add_column("Gloss", style="white")
@@ -407,7 +410,7 @@ def batch(
                 r["gloss"][:40] + ("..." if len(r["gloss"]) > 40 else ""),
                 f"[{conf_color}]{r['confidence']:.0%}[/{conf_color}]",
             )
-        console.print(table)
+        local_console.print(table)
 
 
 @app.command()
